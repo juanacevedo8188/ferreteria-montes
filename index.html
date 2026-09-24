@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, interactive-widget=resizes-content">
 <title>Ferretera Montes</title>
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -193,14 +193,30 @@
   .chat-opciones { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 14px 10px; }
   .chat-opciones button {
     background: #fff; border: 1.5px solid var(--negro); border-radius: 999px; padding: 6px 12px;
-    font: 600 .85rem/1.2 var(--f-texto); cursor: pointer;
+    font: 600 .85rem/1.2 var(--f-texto); cursor: pointer; color: var(--negro); flex: none;
+    -webkit-appearance: none; appearance: none;
   }
-  .chat-opciones button:hover { background: var(--amarillo); }
+  @media (hover: hover) { .chat-opciones button:hover { background: var(--amarillo); } }
+  .chat-opciones button:active { background: var(--amarillo); }
   .chat-form { display: flex; border-top: 2px solid var(--negro); background: #fff; }
   .chat-form input { flex: 1; border: 0; padding: 12px 14px; font: 1rem var(--f-texto); background: none; min-width: 0; }
   .chat-form input:focus { outline: none; }
-  .chat-form button { border: 0; background: var(--amarillo); padding: 0 16px; font-size: 1.1rem; cursor: pointer; }
-  @media (max-width: 600px) { .chat-abrir span { display: none; } .chat-abrir { padding: 12px; } }
+  .chat-form button { border: 0; background: var(--amarillo); color: var(--negro); padding: 0 16px; font-size: 1.1rem; cursor: pointer; -webkit-appearance: none; appearance: none; }
+  @media (max-width: 600px) {
+    .chat-abrir span { display: none; } .chat-abrir { padding: 12px; }
+    /* En celular el chat ocupa la pantalla y se ajusta al alto visible real (con teclado incluido).
+       --vv-alto y --vv-arriba los pone el JS a partir de visualViewport. */
+    .chat-panel {
+      position: fixed; left: 0; right: 0; bottom: auto; top: var(--vv-arriba, 0px);
+      width: 100%; height: var(--vv-alto, 100dvh); border: 0; border-radius: 0; box-shadow: none;
+    }
+    .chat.abierto .chat-abrir, body.chat-abierto .fuentes { display: none; }
+    .chat-cab { padding-top: max(12px, env(safe-area-inset-top)); }
+    .chat-form { padding-bottom: env(safe-area-inset-bottom); }
+    /* Opciones en una fila deslizable: con el teclado abierto no ocupan media pantalla */
+    .chat-opciones { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding-bottom: 12px; }
+    .chat-opciones::-webkit-scrollbar { display: none; }
+  }
 
   /* ---------- SELECTOR DE FUENTES (para probar; se puede borrar) ---------- */
   .fuentes { position: fixed; left: 12px; bottom: 12px; z-index: 100; font: 14px/1.3 system-ui, sans-serif; }
@@ -661,15 +677,32 @@
     iniciado = false;
     abrirChat(true);
   }
+  // Alto visible real (en iPhone el teclado no achica la página, solo el visualViewport)
+  const vv = window.visualViewport;
+  function ajustarChat() {
+    if (!vv || chat.panel.hidden) return;
+    chat.panel.style.setProperty('--vv-alto', vv.height + 'px');
+    chat.panel.style.setProperty('--vv-arriba', vv.offsetTop + 'px');
+    chat.msgs.scrollTop = chat.msgs.scrollHeight;
+  }
+  if (vv) { vv.addEventListener('resize', ajustarChat); vv.addEventListener('scroll', ajustarChat); }
+  const esCelular = () => matchMedia('(max-width: 600px)').matches;
+
   function abrirChat(abrir) {
     chat.panel.hidden = !abrir;
     chat.abrir.setAttribute('aria-expanded', abrir);
+    document.getElementById('chat').classList.toggle('abierto', abrir);
+    document.body.classList.toggle('chat-abierto', abrir);
+    // En celular, la página de atrás no scrollea mientras el chat está abierto
+    document.documentElement.style.overflow = abrir && esCelular() ? 'hidden' : '';
+    ajustarChat();
     if (abrir && !iniciado) {
       iniciado = true;
       agregar('¡Hola! Soy el asistente de Ferretera Montes. Te ayudo con lo básico, y para todo lo demás te paso con Diego, el dueño, que es quien atiende la ferretería.', 'bot');
       mostrarOpciones();
     }
-    if (abrir) chat.input.focus();
+    // Solo con mouse se pone el cursor en el campo: en celular abriría el teclado de golpe
+    if (abrir && matchMedia('(hover: hover) and (pointer: fine)').matches) chat.input.focus();
   }
   chat.abrir.addEventListener('click', () => abrirChat(chat.panel.hidden));
   document.getElementById('chatCerrar').addEventListener('click', () => abrirChat(false));
