@@ -100,19 +100,18 @@
   }
   /* Clavo de costado, asomando del borde superior del cartel.
      --salida: 1 = afuera (antes de scrollear), 0 = hundido al ras. La maneja el JS. */
+  /* El contenedor recorta al clavo por abajo: lo que queda fuera es lo que "entró" en la madera. */
   .clavo {
     position: absolute; left: 24%; bottom: 100%; width: 26px; margin-left: -13px; pointer-events: none;
-    height: calc(var(--salida, 1) * 34px + 7px);
-    filter: drop-shadow(3px 3px 2px rgba(0,0,0,.6));
+    height: calc(var(--salida, 1) * 34px + 7px); overflow: hidden;
+    filter: drop-shadow(3px 3px 2px rgba(0,0,0,.55));
   }
-  .clavo::before { /* cuerpo */
-    content: ""; position: absolute; left: 50%; top: 6px; bottom: 0; width: 6px; margin-left: -3px;
-    background: linear-gradient(90deg, #4b545b, #e8edf0 40%, #8d979e 70%, #3c4247);
-  }
-  .clavo::after { /* cabeza */
-    content: ""; position: absolute; left: 0; right: 0; top: 0; height: 7px; border-radius: 3px / 2px;
-    background: linear-gradient(180deg, #f4f7f9, #b3bcc3 45%, #5d666d 80%, #3c4247);
-    box-shadow: 0 0 0 1px #1d1f21;
+  .clavo svg { position: absolute; left: 0; top: 0; width: 26px; height: 60px; }
+  /* Marca en la madera donde entra el clavo */
+  .agujero {
+    position: absolute; left: 24%; top: -2px; width: 16px; height: 5px; margin-left: -8px; border-radius: 50%;
+    background: radial-gradient(ellipse at 50% 40%, #0d0a08 30%, rgba(13,10,8,.5) 60%, transparent 75%);
+    pointer-events: none;
   }
   .hero-contenido { position: relative; padding: 70px 24px 0; }
   .pre { color: var(--amarillo); font-weight: 700; letter-spacing: 3px; text-transform: uppercase; font-size: .85rem; }
@@ -130,6 +129,72 @@
   .cartel .m { font-size: 1.35em; }
   .cartel .palabra { white-space: nowrap; }
   .lema, .bloque h2, .detras h2, .stats b, .precio, .card h3 { font-family: var(--f-titulo); font-weight: var(--w-titulo); }
+
+  /* ---------- NOSOTROS ---------- */
+  .nosotros-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 48px; align-items: center; }
+  .nosotros p { color: #444; margin-bottom: 14px; max-width: 60ch; }
+  .nosotros .nosotros-lead { font-size: 1.2rem; color: var(--negro); }
+  .valores { list-style: none; display: grid; gap: 12px; margin-top: 22px; }
+  .valores li { padding-left: 18px; border-left: 4px solid var(--amarillo); color: #555; }
+  .valores b { display: block; color: var(--negro); }
+  .diego {
+    background: var(--negro); color: #fff; border-radius: 8px; padding: 30px 26px; text-align: center;
+    box-shadow: 8px 8px 0 var(--amarillo);
+  }
+  .diego-avatar {
+    width: 84px; height: 84px; margin: 0 auto 14px; display: grid; place-items: center;
+    background: var(--amarillo); color: var(--chapa); border-radius: 6px; transform: rotate(8deg);
+    font: var(--w-cartel) 2.8rem/1 var(--f-cartel); box-shadow: 2px 3px 0 #000;
+  }
+  .diego-avatar.chico { width: 38px; height: 38px; margin: 0; font-size: 1.3rem; transform: rotate(8deg); flex: none; }
+  .diego-nombre { font: var(--w-titulo) 1.8rem/1.1 var(--f-titulo); }
+  .diego-rol { color: var(--amarillo); font-size: .9rem; margin-bottom: 16px; }
+  .diego-cita { color: var(--gris-claro); font-style: italic; margin-bottom: 16px; }
+  .diego-rating { font-size: .9rem; color: var(--gris-claro); margin-bottom: 20px; }
+  .diego-rating b { color: var(--amarillo); }
+  .btn.btn-wa { display: inline-flex; align-items: center; gap: 8px; background: #25d366; color: #0b2e17; box-shadow: 4px 4px 0 #128c4a; }
+  .btn.btn-wa:hover { box-shadow: 2px 2px 0 #128c4a; }
+  .btn-wa svg { width: 20px; height: 20px; }
+  .botones { display: flex; flex-wrap: wrap; gap: 12px; }
+  @media (max-width: 800px) { .nosotros-grid { grid-template-columns: 1fr; gap: 36px; } }
+
+  /* ---------- CHAT ---------- */
+  .chat { position: fixed; right: 16px; bottom: 16px; z-index: 95; font-family: var(--f-texto); }
+  .chat-abrir {
+    display: flex; align-items: center; gap: 8px; border: 2px solid var(--negro); border-radius: 999px;
+    background: #25d366; color: #0b2e17; font: 800 .95rem/1 var(--f-texto); padding: 12px 18px 12px 14px;
+    box-shadow: 3px 4px 0 var(--negro); cursor: pointer; transition: transform .25s, opacity .25s;
+  }
+  .chat-abrir svg { width: 24px; height: 24px; }
+  .chat-abrir.oculto { transform: translateY(120px); opacity: 0; pointer-events: none; }
+  .chat-panel {
+    position: absolute; right: 0; bottom: 64px; width: min(360px, calc(100vw - 32px)); height: min(540px, calc(100vh - 110px));
+    display: flex; flex-direction: column; background: var(--papel); border: 2px solid var(--negro); border-radius: 10px;
+    box-shadow: 6px 6px 0 var(--negro); overflow: hidden;
+  }
+  .chat-panel[hidden] { display: none; }
+  .chat-cab { display: flex; align-items: center; gap: 12px; background: var(--negro); color: #fff; padding: 12px 14px; }
+  .chat-cab b { display: block; font-size: .95rem; }
+  .chat-cab small { font-size: .78rem; font-weight: 600; color: var(--gris-claro); }
+  .chat-cab .estado::before { width: 7px; height: 7px; }
+  .chat-cerrar { margin-left: auto; background: none; border: 0; color: #fff; font-size: 1.6rem; line-height: 1; cursor: pointer; padding: 0 4px; }
+  .chat-mensajes { flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 8px; }
+  .msg { max-width: 85%; padding: 9px 12px; border-radius: 12px; font-size: .93rem; line-height: 1.4; white-space: pre-line; }
+  .msg.bot { background: #fff; border: 1px solid #ddd6c8; border-bottom-left-radius: 3px; align-self: flex-start; }
+  .msg.yo { background: var(--amarillo); border-bottom-right-radius: 3px; align-self: flex-end; }
+  .msg a.btn-wa { margin-top: 10px; padding: 9px 14px; font-size: .9rem; text-decoration: none; border-radius: 6px; }
+  .msg.escribiendo { color: #888; font-style: italic; }
+  .chat-opciones { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 14px 10px; }
+  .chat-opciones button {
+    background: #fff; border: 1.5px solid var(--negro); border-radius: 999px; padding: 6px 12px;
+    font: 600 .85rem/1.2 var(--f-texto); cursor: pointer;
+  }
+  .chat-opciones button:hover { background: var(--amarillo); }
+  .chat-form { display: flex; border-top: 2px solid var(--negro); background: #fff; }
+  .chat-form input { flex: 1; border: 0; padding: 12px 14px; font: 1rem var(--f-texto); background: none; min-width: 0; }
+  .chat-form input:focus { outline: none; }
+  .chat-form button { border: 0; background: var(--amarillo); padding: 0 16px; font-size: 1.1rem; cursor: pointer; }
+  @media (max-width: 600px) { .chat-abrir span { display: none; } .chat-abrir { padding: 12px; } }
 
   /* ---------- SELECTOR DE FUENTES (para probar; se puede borrar) ---------- */
   .fuentes { position: fixed; left: 12px; bottom: 12px; z-index: 100; font: 14px/1.3 system-ui, sans-serif; }
@@ -260,6 +325,7 @@
   <ul>
     <li><a href="#rubros">Rubros</a></li>
     <li><a href="#servicios">Servicios</a></li>
+    <li><a href="#nosotros">Nosotros</a></li>
     <li><a href="#ofertas">Ofertas</a></li>
     <li><a href="#contacto">Contacto</a></li>
   </ul>
@@ -284,7 +350,31 @@
     <div class="panel" id="panel">
       <div class="hero-contenido">
         <div class="pre">Blvd. Rondeau 762 · Rosario <span class="estado" data-estado></span></div>
-        <h1 class="cartel" id="titulo" aria-label="Ferretera Montes"><span class="palabra">FERRETERA</span><span class="m">M</span><span class="palabra">ONTES</span><span class="clavo" id="clavo" aria-hidden="true"></span></h1>
+        <h1 class="cartel" id="titulo" aria-label="Ferretera Montes"><span class="palabra">FERRETERA</span><span class="m">M</span><span class="palabra">ONTES</span><span class="agujero" aria-hidden="true"></span><span class="clavo" id="clavo" aria-hidden="true"><svg viewBox="0 0 26 60">
+          <defs>
+            <linearGradient id="gCuerpoClavo" x1="0" x2="1">
+              <stop offset="0" stop-color="#2f353a"/><stop offset=".3" stop-color="#b9c2c8"/><stop offset=".45" stop-color="#f4f7f9"/>
+              <stop offset=".65" stop-color="#8d979e"/><stop offset="1" stop-color="#2a3035"/>
+            </linearGradient>
+            <linearGradient id="gCabezaClavo" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#fdfefe"/><stop offset=".35" stop-color="#c3cbd1"/>
+              <stop offset=".7" stop-color="#6b747b"/><stop offset="1" stop-color="#353b40"/>
+            </linearGradient>
+          </defs>
+          <rect x="10" y="6" width="6" height="54" fill="url(#gCuerpoClavo)"/>
+          <!-- estrías de agarre bajo la cabeza -->
+          <g stroke="#1e2327" stroke-opacity=".45" stroke-width=".8">
+            <path d="M10 10.5h6M10 12.5h6M10 14.5h6M10 16.5h6"/>
+          </g>
+          <!-- cuello cónico -->
+          <path d="M6 6.5 L20 6.5 L16 9.5 L10 9.5 Z" fill="#7d878e"/>
+          <!-- cabeza, apenas abombada -->
+          <path d="M1 4.6 Q1.5 1 13 .8 Q24.5 1 25 4.6 L25 5.6 Q24.5 7.2 13 7.2 Q1.5 7.2 1 5.6 Z" fill="url(#gCabezaClavo)" stroke="#1d2226" stroke-width=".6"/>
+          <path d="M4 2.6 Q13 1.2 22 2.6" stroke="#fff" stroke-width=".8" stroke-opacity=".9" fill="none"/>
+          <!-- reflejo y algo de óxido en el cuerpo -->
+          <path d="M12.3 11 V58" stroke="#fff" stroke-opacity=".55" stroke-width=".7"/>
+          <ellipse cx="14.5" cy="24" rx="1.2" ry="2.5" fill="#7a4a2a" opacity=".35"/>
+        </svg></span></h1>
         <div class="lema">Todo para tu <span class="amarillo">obra</span></div>
         <p>Herramientas, bulonería, electricidad, plomería y pintura. Si no lo tenemos, te lo conseguimos.</p>
       </div>
@@ -326,6 +416,30 @@
   </div>
 </section>
 
+<section class="bloque nosotros" id="nosotros">
+  <div class="contenedor nosotros-grid">
+    <div class="revelar">
+      <div class="etiqueta">Ferretería familiar</div>
+      <h2>Atendida por sus dueños</h2>
+      <p class="nosotros-lead">En Ferretera Montes te atiende Diego, el dueño, junto a su familia. Sin vueltas: nos contás qué estás arreglando y te ayudamos a encontrar la pieza justa, aunque sea un solo tornillo.</p>
+      <p>Somos una ferretería de barrio en Blvd. Rondeau. Muchos de nuestros clientes vuelven porque saben que acá los asesoramos de verdad, y si no tenemos lo que buscan, se lo conseguimos.</p>
+      <ul class="valores">
+        <li><b>Atención personalizada</b>Te atiende el dueño, no un call center.</li>
+        <li><b>Asesoramiento</b>Traé la pieza o una foto y vemos qué va.</li>
+        <li><b>Entrega a domicilio</b>Coordinamos el envío por WhatsApp.</li>
+      </ul>
+    </div>
+    <aside class="diego revelar">
+      <div class="diego-avatar" aria-hidden="true">D</div>
+      <div class="diego-nombre">Diego</div>
+      <div class="diego-rol">Dueño · te atiende en el mostrador</div>
+      <div class="diego-cita">“Si no sabés cómo se llama la pieza, no importa: mandame una foto y lo resolvemos.”</div>
+      <div class="diego-rating"><b>4.8 ★</b> 58 reseñas en Google</div>
+      <a class="btn btn-wa" href="#" data-wa="Hola Diego, te escribo desde la web."><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20zm4.4-6c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.5.1l-.8.9c-.1.2-.3.2-.5.1a6.6 6.6 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.5-.4h-.5a.9.9 0 0 0-.6.3 2.7 2.7 0 0 0-.8 2c0 1.2.9 2.3 1 2.5.1.2 1.7 2.6 4.2 3.7 1.6.7 2.2.7 3 .6.5-.1 1.4-.6 1.6-1.1.2-.6.2-1 .1-1.1l-.4-.2z"/></svg> Consultale a Diego</a>
+    </aside>
+  </div>
+</section>
+
 <section class="bloque ofertas" id="ofertas">
   <div class="contenedor">
     <div class="etiqueta">Esta semana</div>
@@ -341,9 +455,12 @@
 <section class="bloque oscuro" id="contacto">
   <div class="contenedor contacto-grid">
     <div>
-      <div class="etiqueta">Vení o llamanos</div>
+      <div class="etiqueta">Vení, llamanos o escribinos</div>
       <h2>Contacto</h2>
-      <a class="btn" href="tel:+543413233659">Llamar: 0341 323-3659</a>
+      <div class="botones">
+        <a class="btn btn-wa" href="#" data-wa="Hola Diego, te escribo desde la web."><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20zm4.4-6c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.5.1l-.8.9c-.1.2-.3.2-.5.1a6.6 6.6 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.5-.4h-.5a.9.9 0 0 0-.6.3 2.7 2.7 0 0 0-.8 2c0 1.2.9 2.3 1 2.5.1.2 1.7 2.6 4.2 3.7 1.6.7 2.2.7 3 .6.5-.1 1.4-.6 1.6-1.1.2-.6.2-1 .1-1.1l-.4-.2z"/></svg> WhatsApp</a>
+        <a class="btn" href="tel:+543413233659">Llamar: 0341 323-3659</a>
+      </div>
     </div>
     <div>
       <div class="dato"><strong>Dirección</strong>Blvd. Rondeau 762, S2013HEU Rosario, Santa Fe</div>
@@ -364,6 +481,24 @@
     </div>
   </div>
 </section>
+
+<!-- Asistente: responde lo básico y deriva a Diego por WhatsApp. No usa IA ni servicios externos. -->
+<div class="chat" id="chat">
+  <section class="chat-panel" id="chatPanel" role="dialog" aria-label="Consultas con Ferretera Montes" hidden>
+    <header class="chat-cab">
+      <div class="diego-avatar chico" aria-hidden="true">D</div>
+      <div><b>Diego · Ferretera Montes</b><small class="estado" data-estado></small></div>
+      <button class="chat-cerrar" id="chatCerrar" aria-label="Cerrar">×</button>
+    </header>
+    <div class="chat-mensajes" id="chatMensajes" aria-live="polite"></div>
+    <div class="chat-opciones" id="chatOpciones"></div>
+    <form class="chat-form" id="chatForm" autocomplete="off">
+      <input id="chatInput" type="text" placeholder="Escribí tu consulta…" aria-label="Tu consulta" maxlength="300">
+      <button type="submit" aria-label="Enviar">➤</button>
+    </form>
+  </section>
+  <button class="chat-abrir" id="chatAbrir" aria-expanded="false" aria-controls="chatPanel"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20zm4.4-6c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.5.1l-.8.9c-.1.2-.3.2-.5.1a6.6 6.6 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.5-.4h-.5a.9.9 0 0 0-.6.3 2.7 2.7 0 0 0-.8 2c0 1.2.9 2.3 1 2.5.1.2 1.7 2.6 4.2 3.7 1.6.7 2.2.7 3 .6.5-.1 1.4-.6 1.6-1.1.2-.6.2-1 .1-1.1l-.4-.2z"/></svg><span>Consultá con Diego</span></button>
+</div>
 
 <!-- Selector de fuentes: probar combinaciones. Se puede borrar este bloque, su CSS y su JS. -->
 <div class="fuentes" id="fuentes">
@@ -424,6 +559,94 @@
   }
   estadoLocal();
   setInterval(estadoLocal, 60000);
+
+  // ---- WhatsApp ----
+  // TODO: confirmar que este número tenga WhatsApp (formato internacional sin 0 ni 15).
+  const WA = '5493413233659';
+  const wa = msg => `https://wa.me/${WA}?text=${encodeURIComponent(msg)}`;
+  document.querySelectorAll('[data-wa]').forEach(a => { a.href = wa(a.dataset.wa); a.target = '_blank'; a.rel = 'noopener'; });
+  const WA_ICONO = document.querySelector('.btn-wa svg').outerHTML;
+
+  // ---- Asistente: respuestas simples y derivación a Diego ----
+  const chat = {
+    panel: document.getElementById('chatPanel'), abrir: document.getElementById('chatAbrir'),
+    msgs: document.getElementById('chatMensajes'), opciones: document.getElementById('chatOpciones'),
+    form: document.getElementById('chatForm'), input: document.getElementById('chatInput'),
+  };
+  let esperandoProducto = false, iniciado = false;
+
+  function agregar(texto, quien, linkWa) {
+    const m = document.createElement('div');
+    m.className = 'msg ' + quien;
+    m.textContent = texto;
+    if (linkWa) {
+      const a = document.createElement('a');
+      a.className = 'btn btn-wa'; a.href = wa(linkWa); a.target = '_blank'; a.rel = 'noopener';
+      a.innerHTML = WA_ICONO + ' Escribirle a Diego';
+      m.appendChild(document.createElement('br')); m.appendChild(a);
+    }
+    chat.msgs.appendChild(m);
+    chat.msgs.scrollTop = chat.msgs.scrollHeight;
+  }
+  function responder(texto, linkWa) {
+    const t = document.createElement('div');
+    t.className = 'msg bot escribiendo'; t.textContent = 'escribiendo…';
+    chat.msgs.appendChild(t); chat.msgs.scrollTop = chat.msgs.scrollHeight;
+    setTimeout(() => { t.remove(); agregar(texto, 'bot', linkWa); }, 550);
+  }
+  const OPCIONES = {
+    'Busco un producto': () => { esperandoProducto = true; responder('Contame qué necesitás (por ejemplo: "tarugos del 8" o "llave térmica 20A") y se lo paso a Diego.'); },
+    'Horarios': () => responder(`Lunes a viernes: 8:30 a 13 y 16:30 a 18:30\nSábado: 9 a 13\nDomingo: cerrado\n\nAhora: ${document.querySelector('[data-estado]').textContent}.`),
+    'Dirección': () => responder('Estamos en Blvd. Rondeau 762, Rosario.\nEn la sección Contacto tenés el mapa y el botón "Cómo llegar".'),
+    'Envíos': () => responder('Sí, hacemos entrega a domicilio. La zona y el costo los coordina Diego: consultá con él.', 'Hola Diego, quería consultar por un envío a domicilio.'),
+    'Hablar con Diego': () => responder('Diego es el dueño y el que atiende la ferretería. Escribile directo por WhatsApp.', 'Hola Diego, te escribo desde la web.'),
+  };
+  function mostrarOpciones() {
+    chat.opciones.innerHTML = '';
+    Object.keys(OPCIONES).forEach(op => {
+      const b = document.createElement('button'); b.type = 'button'; b.textContent = op;
+      b.addEventListener('click', () => { agregar(op, 'yo'); OPCIONES[op](); });
+      chat.opciones.appendChild(b);
+    });
+  }
+  function interpretar(texto) {
+    const t = texto.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    if (esperandoProducto) {
+      esperandoProducto = false;
+      return responder(`Consultá con Diego: él te confirma si hay "${texto}" y el precio.`, `Hola Diego, ¿tenés ${texto}?`);
+    }
+    if (/horario|abren|abris|abierto|cierran|cerras|hora/.test(t)) return OPCIONES['Horarios']();
+    if (/donde|direcc|ubicac|llegar|queda/.test(t)) return OPCIONES['Dirección']();
+    if (/envio|domicilio|delivery|mandan|llevan/.test(t)) return OPCIONES['Envíos']();
+    if (/^(hola|buenas|buen dia|buenas tardes|buenas noches)\b/.test(t) && t.length < 25)
+      return responder('¡Hola! ¿En qué te puedo ayudar? Elegí una opción o escribí tu consulta.');
+    responder('Eso consultalo con Diego, el dueño, que es quien atiende la ferretería. Te paso con él por WhatsApp con tu consulta ya escrita.',
+      `Hola Diego, te escribo desde la web: ${texto}`);
+  }
+  function abrirChat(abrir) {
+    chat.panel.hidden = !abrir;
+    chat.abrir.setAttribute('aria-expanded', abrir);
+    if (abrir && !iniciado) {
+      iniciado = true;
+      agregar('¡Hola! Soy el asistente de Ferretera Montes. Te ayudo con lo básico, y para todo lo demás te paso con Diego, el dueño, que es quien atiende la ferretería.', 'bot');
+      mostrarOpciones();
+    }
+    if (abrir) chat.input.focus();
+  }
+  chat.abrir.addEventListener('click', () => abrirChat(chat.panel.hidden));
+  document.getElementById('chatCerrar').addEventListener('click', () => abrirChat(false));
+  chat.form.addEventListener('submit', e => {
+    e.preventDefault();
+    const texto = chat.input.value.trim();
+    if (!texto) return;
+    chat.input.value = '';
+    agregar(texto, 'yo');
+    interpretar(texto);
+  });
+  // En el hero el botón se esconde para no tapar al martillo en reposo
+  const botonChat = () => chat.abrir.classList.toggle('oculto', scrollY < 120 && chat.panel.hidden);
+  addEventListener('scroll', botonChat, { passive: true });
+  botonChat();
 
   // ---- Selector de fuentes (cartel / títulos / texto) ----
   // Se recuerda la elección y también se puede compartir con ?fuente=stencil
