@@ -60,7 +60,7 @@
 
   /* ---------- ESCENA DEL HERO ----------
      .escena es alta (da recorrido de scroll); .stage queda fija (sticky) mientras
-     el martillo engancha el clavo y tira el panel hacia abajo. */
+     el martillo golpea el clavo del cartel, el clavo se hunde y el panel baja. */
   .escena { position: relative; height: 250vh; }
   .stage { position: sticky; top: 0; height: 100vh; min-height: 520px; overflow: hidden; }
 
@@ -98,19 +98,27 @@
     position: absolute; left: 0; right: 0; bottom: 0; height: 26px;
     background: repeating-linear-gradient(-45deg, var(--amarillo) 0 22px, var(--negro) 22px 44px);
   }
+  /* Clavo de costado, asomando del borde superior del cartel.
+     --salida: 1 = afuera (antes de scrollear), 0 = hundido al ras. La maneja el JS. */
   .clavo {
-    position: absolute; left: 50%; top: 20%; width: 30px; height: 30px; margin: -15px 0 0 -15px; border-radius: 50%;
-    background: radial-gradient(circle at 35% 30%, #fff, #c9d0d6 25%, #7d868e 60%, #3c4247);
-    box-shadow: 0 0 0 2px #1d1f21, 3px 5px 6px rgba(0,0,0,.6);
+    position: absolute; left: 24%; bottom: 100%; width: 26px; margin-left: -13px; pointer-events: none;
+    height: calc(var(--salida, 1) * 34px + 7px);
+    filter: drop-shadow(3px 3px 2px rgba(0,0,0,.6));
   }
-  .clavo::after { /* marcas del cabezal */
-    content: ""; position: absolute; inset: 7px; border-radius: 50%;
-    background: repeating-conic-gradient(rgba(0,0,0,.18) 0 10deg, transparent 10deg 20deg);
+  .clavo::before { /* cuerpo */
+    content: ""; position: absolute; left: 50%; top: 6px; bottom: 0; width: 6px; margin-left: -3px;
+    background: linear-gradient(90deg, #4b545b, #e8edf0 40%, #8d979e 70%, #3c4247);
+  }
+  .clavo::after { /* cabeza */
+    content: ""; position: absolute; left: 0; right: 0; top: 0; height: 7px; border-radius: 3px / 2px;
+    background: linear-gradient(180deg, #f4f7f9, #b3bcc3 45%, #5d666d 80%, #3c4247);
+    box-shadow: 0 0 0 1px #1d1f21;
   }
   .hero-contenido { position: relative; padding: 70px 24px 0; }
   .pre { color: var(--amarillo); font-weight: 700; letter-spacing: 3px; text-transform: uppercase; font-size: .85rem; }
   .cartel {
-    display: inline-flex; align-items: center; margin: 22px 0 22px;
+    position: relative;
+    display: inline-flex; align-items: center; margin: 58px 0 22px;
     font: var(--w-cartel) clamp(1.3rem, 5.6vw, 4.4rem)/1 var(--f-cartel);
     letter-spacing: .12em; color: var(--letra-cartel);
     padding: .45em .6em; border-radius: 4px;
@@ -274,10 +282,9 @@
     </div>
 
     <div class="panel" id="panel">
-      <div class="clavo" id="clavo"></div>
       <div class="hero-contenido">
         <div class="pre">Blvd. Rondeau 762 · Rosario <span class="estado" data-estado></span></div>
-        <h1 class="cartel" id="titulo" aria-label="Ferretera Montes"><span class="palabra">FERRETERA</span><span class="m">M</span><span class="palabra">ONTES</span></h1>
+        <h1 class="cartel" id="titulo" aria-label="Ferretera Montes"><span class="palabra">FERRETERA</span><span class="m">M</span><span class="palabra">ONTES</span><span class="clavo" id="clavo" aria-hidden="true"></span></h1>
         <div class="lema">Todo para tu <span class="amarillo">obra</span></div>
         <p>Herramientas, bulonería, electricidad, plomería y pintura. Si no lo tenemos, te lo conseguimos.</p>
       </div>
@@ -479,18 +486,19 @@
   const clavo = document.getElementById('clavo');
   const martillo = document.getElementById('martillo');
 
-  const UNA = { x: 94, y: -397 };    // punta de la uña que engancha el clavo (px de la foto ×1.1, desde la base del mango)
-  const ANG_ENGANCHE = -35;          // inclinación del martillo cuando tiene el clavo
+  const CARA = { x: -130, y: -436 }; // centro de la cara de golpe (px de la foto ×1.1, desde la base del mango)
+  const ANG_GOLPE = -86;              // martillo casi horizontal, cara hacia abajo
+  const LARGO_CLAVO = 34, CABEZA_CLAVO = 7;  // px, iguales al CSS de .clavo
   const rad = d => d * Math.PI / 180;
   const clamp01 = v => Math.min(1, Math.max(0, v));
   const tramo = (p, a, b) => clamp01((p - a) / (b - a));
   const suave = t => t * t * (3 - 2 * t);
   const mezclar = (A, B, t) => ({ x: A.x + (B.x - A.x) * t, y: A.y + (B.y - A.y) * t, a: A.a + (B.a - A.a) * t });
 
-  // Dónde tiene que estar la base del mango para que la uña caiga justo sobre el punto (cx, cy)
-  function agarre(cx, cy, ang, k) {
+  // Dónde tiene que estar la base del mango para que la cara caiga justo sobre el punto (cx, cy)
+  function apoyar(cx, cy, ang, esc) {
     const c = Math.cos(rad(ang)), s = Math.sin(rad(ang));
-    return { x: cx - k * (UNA.x * c - UNA.y * s), y: cy - k * (UNA.x * s + UNA.y * c), a: ang };
+    return { x: cx - esc * (CARA.x * c - CARA.y * s), y: cy - esc * (CARA.x * s + CARA.y * c), a: ang };
   }
 
   let golpeado = false, pendiente = false, inercia = 0, ultimoY = scrollY;
@@ -522,49 +530,58 @@
     const p = clamp01(scrollY / recorrido);
     const k = Math.min(1, Math.max(.6, vw / 1000));  // escala del martillo
 
-    // Clavo en coordenadas de la escena (sin el desplazamiento del panel)
-    const cx = clavo.offsetLeft + clavo.offsetWidth / 2;
-    const cy = clavo.offsetTop + clavo.offsetHeight / 2;
+    // Fases (p = progreso del scroll en la escena):
+    //   0–.05 reposo · .05–.28 se levanta · .28–.34 baja el golpe · .34–.36 el clavo se hunde
+    //   .36–1 el panel se desliza hacia abajo con el martillo apoyado
+    const salida = 1 - tramo(p, .335, .36);
+    clavo.style.setProperty('--salida', salida);
+    const bajada = suave(tramo(p, .36, 1)) * (vh + 80);
 
-    // Fases: reposo → se levanta → golpe con la uña → tira del panel hacia abajo
-    const tirar = suave(tramo(p, .42, 1));
-    const bajada = tirar * (vh + 80);
+    // Clavo en coordenadas del panel (sin su desplazamiento): centro y borde del cartel
+    const pr = panel.getBoundingClientRect(), cr = clavo.getBoundingClientRect();
+    const cx = cr.left + cr.width / 2 - pr.left;
+    const borde = cr.bottom - pr.top;
+    const cabeza = s => borde - (s * LARGO_CLAVO + CABEZA_CLAVO);  // y de la cabeza del clavo según cuánto asoma
 
     const reposo    = { x: vw - 70 * k, y: vh + 120 * k, a: -22 };
-    const enganche  = agarre(cx, cy, ANG_ENGANCHE, k);
-    const levantado = { x: enganche.x + 80 * k, y: enganche.y + 40 * k, a: ANG_ENGANCHE + 48 };
+    const golpe     = apoyar(cx, cabeza(1), ANG_GOLPE, k);          // toca el clavo todavía afuera
+    const levantado = { x: golpe.x + 30 * k, y: golpe.y + 10 * k, a: ANG_GOLPE + 50 };
 
     // Inercia: al scrollear rápido el martillo se atrasa un poco y después se acomoda
     const vel = scrollY - ultimoY;
     ultimoY = scrollY;
-    const objetivo = p > .05 ? Math.max(-9, Math.min(9, -vel * .18)) : 0;
+    const objetivo = p > .05 && p < .34 ? Math.max(-8, Math.min(8, -vel * .15)) : 0;
     inercia += (objetivo - inercia) * .2;
 
-    // altura: 0 = apoyado sobre el panel, 1 = levantado (aleja la sombra)
+    // altura: 0 = apoyado, 1 = levantado. Aleja la sombra y agranda el martillo (más cerca de la cámara)
     let pose, altura;
     if (p < .05) { pose = reposo; altura = .25; }
-    else if (p < .30) { const t = suave(tramo(p, .05, .30)); pose = mezclar(reposo, levantado, t); altura = .25 + .75 * t; }
-    else if (p < .36) { const t = tramo(p, .30, .36); pose = mezclar(levantado, enganche, t * t); altura = 1 - .9 * t * t; }
+    else if (p < .28) { const t = suave(tramo(p, .05, .28)); pose = mezclar(reposo, levantado, t); altura = .25 + .75 * t; }
+    else if (p < .34) { const t = tramo(p, .28, .34); pose = mezclar(levantado, golpe, t * t); altura = 1 - t * t; }
     else {
-      // Rebote corto después del golpe y leve giro mientras tira.
-      // agarre() mantiene la uña sobre el clavo aunque cambie el ángulo.
-      const rebote = Math.sin(Math.PI * tramo(p, .36, .42)) * 7;
-      pose = agarre(cx, cy + bajada, ANG_ENGANCHE + rebote + tirar * 10 + inercia, k);
-      altura = .1 + rebote / 50;
+      // Sigue la cabeza del clavo mientras se hunde, rebota un poco y baja con el panel
+      const rebote = Math.sin(Math.PI * tramo(p, .36, .44)) * 5;
+      pose = apoyar(cx, cabeza(salida) + bajada, ANG_GOLPE + rebote, k);
+      altura = rebote / 25;
     }
-    if (p > .05 && p < .36) pose = { ...pose, a: pose.a + inercia };
+    if (p > .05 && p < .34) pose = { ...pose, a: pose.a + inercia };
 
-    martillo.style.transform = `translate(${pose.x}px, ${pose.y}px) rotate(${pose.a}deg) scale(${k})`;
-    sombra.style.transform = `translate(${pose.x + (6 + 34 * altura) * k}px, ${pose.y + (10 + 46 * altura) * k}px) rotate(${pose.a}deg) scale(${k})`;
+    const esc = k * (1 + .12 * altura);
+    // El agrandado se hace desde la cara de golpe, para que no se despegue del clavo
+    const c = Math.cos(rad(pose.a)), sn = Math.sin(rad(pose.a));
+    const fx = pose.x + k * (CARA.x * c - CARA.y * sn), fy = pose.y + k * (CARA.x * sn + CARA.y * c);
+    const px = fx - esc / k * (fx - pose.x), py = fy - esc / k * (fy - pose.y);
+    martillo.style.transform = `translate(${px}px, ${py}px) rotate(${pose.a}deg) scale(${esc})`;
+    sombra.style.transform = `translate(${px + (6 + 34 * altura) * k}px, ${py + (10 + 46 * altura) * k}px) rotate(${pose.a}deg) scale(${esc})`;
     sombra.style.opacity = .55 - .25 * altura;
     panel.style.transform = bajada ? `translateY(${bajada}px)` : '';
 
     // Impacto: una sola vez al cruzar el golpe bajando
-    if (p >= .36 && !golpeado) {
+    if (p >= .34 && !golpeado) {
       golpeado = true;
-      chispas(cx, cy);
+      chispas(cx, cabeza(1));
       stage.classList.remove('temblor'); void stage.offsetWidth; stage.classList.add('temblor');
-    } else if (p < .33) golpeado = false;
+    } else if (p < .31) golpeado = false;
 
     navSolida();
     if (Math.abs(inercia) > .05) pedir();  // seguir hasta que la inercia se asiente
