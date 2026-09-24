@@ -164,11 +164,12 @@
     transform-origin: 0 0; will-change: transform; pointer-events: none;
   }
   .martillo svg {
-    position: absolute; left: -120px; top: -410px; width: 240px; height: 420px; overflow: visible;
-    filter: drop-shadow(10px 14px 8px rgba(0,0,0,.55));
+    position: absolute; left: -120px; top: -410px; width: 250px; height: 520px; overflow: visible;
   }
-  .martillo.reposo svg { animation: balanceo 2.4s ease-in-out infinite; transform-origin: 120px 410px; }
-  @keyframes balanceo { 50% { transform: rotate(-4deg); } }
+  /* Sombra: copia del martillo en negro y desenfocada. Va en una capa aparte para que
+     la luz quede fija (si fuera un drop-shadow giraría junto con el martillo). */
+  .martillo.sombra { z-index: 4; }
+  .martillo.sombra svg { filter: brightness(0) blur(7px); }
   .chispa {
     position: absolute; width: 5px; height: 5px; border-radius: 50%; z-index: 6;
     background: #ffd54a; box-shadow: 0 0 6px #ffb300; pointer-events: none;
@@ -283,71 +284,98 @@
     </div>
 
     <!-- Martillo de uña. Origen (0,0) = base del mango; la cabeza queda hacia arriba. -->
-    <div class="martillo reposo" id="martillo" aria-hidden="true">
-      <svg viewBox="-120 -410 240 420">
+    <div class="martillo" id="martillo" aria-hidden="true">
+      <svg viewBox="-120 -410 250 520">
         <defs>
-          <linearGradient id="gMadera" x1="0" x2="1">
-            <stop offset="0" stop-color="#6d3f1b"/><stop offset=".3" stop-color="#b7773c"/>
-            <stop offset=".5" stop-color="#e2ab6c"/><stop offset=".72" stop-color="#b16f36"/>
-            <stop offset="1" stop-color="#5e3415"/>
-          </linearGradient>
-          <linearGradient id="gGoma" x1="0" x2="1">
-            <stop offset="0" stop-color="#0b0b0b"/><stop offset=".4" stop-color="#3d3d3d"/>
-            <stop offset=".6" stop-color="#222"/><stop offset="1" stop-color="#080808"/>
+          <!-- Veta de madera: ruido estirado a lo largo del mango -->
+          <filter id="fVeta" x="0" y="0" width="1" height="1">
+            <feTurbulence type="fractalNoise" baseFrequency="0.11 0.005" numOctaves="3" seed="4" result="ruido"/>
+            <feColorMatrix in="ruido" type="matrix"
+              values="0 0 0 0 .22  0 0 0 0 .1  0 0 0 0 .02  3.2 0 0 0 -1.35"/>
+            <feComposite in2="SourceGraphic" operator="in"/>
+          </filter>
+          <!-- Acero cepillado: rayas finas a lo largo de la cabeza -->
+          <filter id="fCepillado" x="0" y="0" width="1" height="1">
+            <feTurbulence type="fractalNoise" baseFrequency="0.015 0.9" numOctaves="2" seed="2" result="ruido"/>
+            <feColorMatrix in="ruido" type="matrix"
+              values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -1.2 .75"/>
+            <feComposite in2="SourceGraphic" operator="in"/>
+          </filter>
+          <linearGradient id="gMango" x1="0" x2="1">
+            <stop offset="0" stop-color="#4a270d"/><stop offset=".18" stop-color="#9a5f2c"/>
+            <stop offset=".38" stop-color="#e2ad72"/><stop offset=".5" stop-color="#c98d52"/>
+            <stop offset=".8" stop-color="#8a5226"/><stop offset="1" stop-color="#3e200a"/>
           </linearGradient>
           <linearGradient id="gAcero" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="#f4f7f9"/><stop offset=".22" stop-color="#bcc5cc"/>
-            <stop offset=".55" stop-color="#6c767e"/><stop offset=".78" stop-color="#a9b3bb"/>
-            <stop offset="1" stop-color="#454d53"/>
+            <stop offset="0" stop-color="#5d666d"/><stop offset=".08" stop-color="#e9eef1"/>
+            <stop offset=".2" stop-color="#b8c1c8"/><stop offset=".48" stop-color="#6f7a82"/>
+            <stop offset=".62" stop-color="#48525a"/><stop offset=".82" stop-color="#8d989f"/>
+            <stop offset="1" stop-color="#3a4248"/>
           </linearGradient>
           <linearGradient id="gCara" x1="0" x2="1">
-            <stop offset="0" stop-color="#4c555c"/><stop offset=".45" stop-color="#e3e8eb"/>
-            <stop offset="1" stop-color="#7f8a92"/>
+            <stop offset="0" stop-color="#8b959c"/><stop offset=".35" stop-color="#f3f6f8"/>
+            <stop offset="1" stop-color="#9aa4ab"/>
           </linearGradient>
-          <linearGradient id="gUna" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stop-color="#dfe5e9"/><stop offset=".5" stop-color="#7b858d"/>
-            <stop offset="1" stop-color="#3f464c"/>
+          <linearGradient id="gUna" x1="0" y1="0" x2=".4" y2="1">
+            <stop offset="0" stop-color="#eef2f4"/><stop offset=".3" stop-color="#a7b1b8"/>
+            <stop offset=".65" stop-color="#58626a"/><stop offset="1" stop-color="#2f363b"/>
           </linearGradient>
+          <radialGradient id="gBrillo" cx=".3" cy=".25" r=".5">
+            <stop offset="0" stop-color="#fff" stop-opacity=".9"/><stop offset="1" stop-color="#fff" stop-opacity="0"/>
+          </radialGradient>
+          <clipPath id="clipMango">
+            <path id="formaMango" d="M-18 88 C-23 50 -21 0 -16 -60 C-12 -160 -11 -290 -13 -392 L13 -392 C11 -290 12 -160 16 -60 C21 0 23 50 18 88 Q0 100 -18 88Z"/>
+          </clipPath>
         </defs>
 
-        <!-- mango de madera -->
-        <path d="M-17 -8 Q-19 -170 -12 -330 L12 -330 Q19 -170 17 -8 Q0 6 -17 -8Z"
-              fill="url(#gMadera)" stroke="#3b220e" stroke-width="1.5"/>
-        <g stroke="#5a3214" stroke-width=".8" fill="none" opacity=".55">
-          <path d="M-8 -130 Q-10 -230 -6 -325"/><path d="M3 -130 Q6 -220 2 -325"/>
-          <path d="M9 -130 Q12 -250 7 -325"/><path d="M-3 -180 q2 -30 -1 -60"/>
+        <!-- ===== Mango de hickory ===== -->
+        <use href="#formaMango" fill="url(#gMango)"/>
+        <g clip-path="url(#clipMango)">
+          <rect x="-24" y="-395" width="48" height="500" fill="#fff" filter="url(#fVeta)"/>
+          <!-- laqueado: reflejo largo y suave -->
+          <path d="M-9 80 C-13 0 -9 -200 -6 -385" stroke="#fff" stroke-opacity=".22" stroke-width="6" fill="none"/>
+          <path d="M-8 75 C-12 0 -8 -200 -5 -385" stroke="#fff" stroke-opacity=".55" stroke-width="1.2" fill="none"/>
+          <!-- oscurece donde entra en la cabeza -->
+          <rect x="-24" y="-395" width="48" height="30" fill="#1b0e04" opacity=".35"/>
         </g>
-        <path d="M-10 -135 Q-12 -230 -7 -326" stroke="#fff" stroke-opacity=".25" stroke-width="3" fill="none"/>
+        <use href="#formaMango" fill="none" stroke="#2c1605" stroke-width="1.4"/>
 
-        <!-- empuñadura de goma con estrías -->
-        <path d="M-21 -6 Q-23 -68 -19 -132 L19 -132 Q23 -68 21 -6 Q0 12 -21 -6Z"
-              fill="url(#gGoma)" stroke="#000" stroke-width="1.5"/>
-        <g stroke="#000" stroke-width="3" opacity=".6">
-          <line x1="-21" y1="-22" x2="21" y2="-22"/><line x1="-21" y1="-36" x2="21" y2="-36"/>
-          <line x1="-21" y1="-50" x2="21" y2="-50"/><line x1="-21" y1="-64" x2="21" y2="-64"/>
-          <line x1="-21" y1="-78" x2="21" y2="-78"/><line x1="-20" y1="-92" x2="20" y2="-92"/>
-          <line x1="-20" y1="-106" x2="20" y2="-106"/>
+        <!-- ===== Cabeza ===== -->
+        <g id="cabeza">
+          <!-- cuello hacia la cara -->
+          <path d="M-84 -390 C-70 -381 -56 -378 -42 -380 L-42 -332 C-56 -334 -70 -331 -84 -322 Z" fill="url(#gAcero)"/>
+          <!-- anillo de la cara -->
+          <rect x="-94" y="-396" width="12" height="80" rx="3" fill="url(#gAcero)"/>
+          <!-- cara de golpe, levemente convexa, con bisel -->
+          <path d="M-94 -394 Q-104 -356 -94 -318 L-90 -318 L-90 -394 Z" fill="url(#gCara)"/>
+          <path d="M-97 -388 Q-103 -356 -97 -324" stroke="#fff" stroke-opacity=".8" stroke-width="1.2" fill="none"/>
+          <!-- ojo -->
+          <path d="M-42 -387 H28 C35 -387 40 -383 40 -377 V-335 C40 -329 35 -325 28 -325 H-42 Z" fill="url(#gAcero)"/>
+          <!-- uña -->
+          <path d="M28 -387 C62 -389 94 -373 113 -331 C119 -317 122 -305 121 -294 L114 -292 C110 -304 104 -316 96 -326 C82 -342 60 -346 38 -337 Z" fill="url(#gUna)"/>
+          <!-- ranura en V de la uña -->
+          <path d="M44 -365 C78 -363 103 -342 119 -297 L114 -294 C100 -337 77 -357 44 -360 Z" fill="#161a1d"/>
+          <path d="M46 -359 C77 -356 99 -337 114 -295" stroke="#9aa4ab" stroke-opacity=".5" stroke-width=".8" fill="none"/>
         </g>
-        <path d="M-12 -12 Q-14 -70 -11 -126" stroke="#fff" stroke-opacity=".18" stroke-width="3" fill="none"/>
-        <rect x="-21" y="-138" width="42" height="9" rx="3" fill="#f5b700" stroke="#000" stroke-width="1.2"/>
-
-        <!-- cabeza: cuello + ojo -->
-        <path d="M-44 -374 H28 Q42 -374 46 -362 L46 -338 Q42 -326 28 -326 H-44Z"
-              fill="url(#gAcero)" stroke="#23282c" stroke-width="1.5"/>
-        <rect x="-12" y="-378" width="24" height="6" rx="1" fill="#8a5427" stroke="#3b220e"/>
-        <line x1="-8" y1="-378" x2="8" y2="-372" stroke="#555" stroke-width="2"/>
-        <!-- cuello hacia la cara -->
-        <path d="M-44 -368 L-80 -372 L-80 -328 L-44 -332Z" fill="url(#gAcero)" stroke="#23282c" stroke-width="1.5"/>
-        <!-- cara de golpe -->
-        <rect x="-100" y="-384" width="22" height="68" rx="6" fill="url(#gCara)" stroke="#23282c" stroke-width="1.5"/>
-        <rect x="-103" y="-380" width="5" height="60" rx="2" fill="#dfe5e9" stroke="#23282c"/>
-        <!-- uña curva, con la ranura en V -->
-        <path d="M28 -374 Q82 -376 110 -298 L98 -292 Q76 -344 28 -338Z"
-              fill="url(#gUna)" stroke="#23282c" stroke-width="1.5"/>
-        <path d="M44 -357 Q78 -350 100 -300" stroke="#1d2226" stroke-width="3" fill="none"/>
-        <!-- brillos -->
-        <path d="M-40 -371 H26" stroke="#fff" stroke-opacity=".8" stroke-width="1.5"/>
-        <path d="M32 -371 Q78 -370 104 -304" stroke="#fff" stroke-opacity=".55" stroke-width="1.2" fill="none"/>
+        <!-- cepillado sobre todo el acero -->
+        <g filter="url(#fCepillado)" opacity=".5">
+          <path d="M-84 -390 C-70 -381 -56 -378 -42 -380 L-42 -332 C-56 -334 -70 -331 -84 -322 Z" fill="#fff"/>
+          <path d="M-42 -387 H28 C35 -387 40 -383 40 -377 V-335 C40 -329 35 -325 28 -325 H-42 Z" fill="#fff"/>
+          <path d="M28 -387 C62 -389 94 -373 113 -331 C119 -317 122 -305 121 -294 L114 -292 C110 -304 104 -316 96 -326 C82 -342 60 -346 38 -337 Z" fill="#fff"/>
+        </g>
+        <!-- aristas y brillos -->
+        <path d="M-82 -386 C-68 -379 -56 -377 -42 -379 H28 C58 -386 92 -370 110 -332" stroke="#fff" stroke-opacity=".85" stroke-width="1.3" fill="none"/>
+        <ellipse cx="-12" cy="-374" rx="30" ry="7" fill="url(#gBrillo)" opacity=".7"/>
+        <path d="M-42 -387 V-325 M40 -377 V-335" stroke="#2a3136" stroke-opacity=".5" stroke-width="1"/>
+        <!-- cuña del mango asomando arriba del ojo -->
+        <rect x="-13" y="-392" width="26" height="6" rx="1.5" fill="#8a5427"/>
+        <path d="M-10 -392 L10 -386" stroke="#bfc7cd" stroke-width="2.2"/>
+        <!-- marca grabada -->
+        <text x="-2" y="-351" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-size="9" font-weight="900" letter-spacing="1.6" fill="#fff" fill-opacity=".35">MONTES</text>
+        <text x="-2" y="-352" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-size="9" font-weight="900" letter-spacing="1.6" fill="#262c30" fill-opacity=".7">MONTES</text>
+        <!-- contorno general -->
+        <path d="M-94 -394 Q-104 -356 -94 -318 L-82 -318 L-84 -322 C-70 -331 -56 -334 -42 -332 L-42 -325 H28 C35 -325 38 -330 38 -337 C60 -346 82 -342 96 -326 C104 -316 110 -304 114 -292 L121 -294 C122 -305 119 -317 113 -331 C94 -373 62 -389 28 -387 H-42 C-56 -378 -70 -381 -84 -390 L-82 -396 H-94 Z"
+              fill="none" stroke="#1f2427" stroke-width="1.3" stroke-linejoin="round"/>
       </svg>
     </div>
 
@@ -540,7 +568,7 @@
   const clavo = document.getElementById('clavo');
   const martillo = document.getElementById('martillo');
 
-  const UNA = { x: 99, y: -304 };   // punto de la uña que engancha el clavo (coords del SVG)
+  const UNA = { x: 113, y: -299 };   // punto de la uña que engancha el clavo (coords del SVG)
   const ANG_ENGANCHE = -35;          // inclinación del martillo cuando tiene el clavo
   const rad = d => d * Math.PI / 180;
   const clamp01 = v => Math.min(1, Math.max(0, v));
@@ -554,7 +582,14 @@
     return { x: cx - k * (UNA.x * c - UNA.y * s), y: cy - k * (UNA.x * s + UNA.y * c), a: ang };
   }
 
-  let golpeado = false, pendiente = false;
+  let golpeado = false, pendiente = false, inercia = 0, ultimoY = scrollY;
+
+  // Capa de sombra (ver CSS de .martillo.sombra)
+  const sombra = martillo.cloneNode(true);
+  sombra.removeAttribute('id');
+  sombra.classList.add('sombra');
+  sombra.querySelectorAll('[id]').forEach(el => el.removeAttribute('id'));
+  stage.insertBefore(sombra, martillo);
 
   function chispas(x, y) {
     for (let i = 0; i < 14; i++) {
@@ -588,17 +623,29 @@
     const enganche  = agarre(cx, cy, ANG_ENGANCHE, k);
     const levantado = { x: enganche.x + 80 * k, y: enganche.y + 40 * k, a: ANG_ENGANCHE + 48 };
 
-    let pose;
-    if (p < .05)      pose = reposo;
-    else if (p < .30) pose = mezclar(reposo, levantado, suave(tramo(p, .05, .30)));
-    else if (p < .36) { const t = tramo(p, .30, .36); pose = mezclar(levantado, enganche, t * t); }
-    else {
-      pose = agarre(cx, cy + bajada, ANG_ENGANCHE + tirar * 10, k);
-      // Si el ángulo cambia, la uña sigue sobre el clavo gracias a agarre()
-    }
+    // Inercia: al scrollear rápido el martillo se atrasa un poco y después se acomoda
+    const vel = scrollY - ultimoY;
+    ultimoY = scrollY;
+    const objetivo = p > .05 ? Math.max(-9, Math.min(9, -vel * .18)) : 0;
+    inercia += (objetivo - inercia) * .2;
 
-    martillo.classList.toggle('reposo', p < .05);
+    // altura: 0 = apoyado sobre el panel, 1 = levantado (aleja la sombra)
+    let pose, altura;
+    if (p < .05) { pose = reposo; altura = .25; }
+    else if (p < .30) { const t = suave(tramo(p, .05, .30)); pose = mezclar(reposo, levantado, t); altura = .25 + .75 * t; }
+    else if (p < .36) { const t = tramo(p, .30, .36); pose = mezclar(levantado, enganche, t * t); altura = 1 - .9 * t * t; }
+    else {
+      // Rebote corto después del golpe y leve giro mientras tira.
+      // agarre() mantiene la uña sobre el clavo aunque cambie el ángulo.
+      const rebote = Math.sin(Math.PI * tramo(p, .36, .42)) * 7;
+      pose = agarre(cx, cy + bajada, ANG_ENGANCHE + rebote + tirar * 10 + inercia, k);
+      altura = .1 + rebote / 50;
+    }
+    if (p > .05 && p < .36) pose = { ...pose, a: pose.a + inercia };
+
     martillo.style.transform = `translate(${pose.x}px, ${pose.y}px) rotate(${pose.a}deg) scale(${k})`;
+    sombra.style.transform = `translate(${pose.x + (6 + 34 * altura) * k}px, ${pose.y + (10 + 46 * altura) * k}px) rotate(${pose.a}deg) scale(${k})`;
+    sombra.style.opacity = .55 - .25 * altura;
     panel.style.transform = bajada ? `translateY(${bajada}px)` : '';
 
     // Impacto: una sola vez al cruzar el golpe bajando
@@ -609,6 +656,7 @@
     } else if (p < .33) golpeado = false;
 
     navSolida();
+    if (Math.abs(inercia) > .05) pedir();  // seguir hasta que la inercia se asiente
   }
   const pedir = () => { if (!pendiente) { pendiente = true; requestAnimationFrame(actualizar); } };
   stage.addEventListener('animationend', e => { if (e.target === stage) stage.classList.remove('temblor'); });
