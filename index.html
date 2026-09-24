@@ -259,8 +259,8 @@
 
     <div class="detras">
       <div>
-        <div class="etiqueta">Ya estás adentro</div>
-        <h2>Pasá, está abierto</h2>
+        <div class="etiqueta" id="detrasEtiqueta">Ya estás adentro</div>
+        <h2 id="detrasTitulo">Pasá, está abierto</h2>
         <div class="stats">
           <div><b>4.8 ★</b>58 reseñas en Google</div>
           <div><b>Envíos</b>entrega a domicilio</div>
@@ -461,15 +461,19 @@
     const dia = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].indexOf(partes.weekday);
     const hora = +partes.hour + partes.minute / 60;
     const turno = HORARIOS[dia].find(([a, b]) => hora >= a && hora < b);
-    let texto;
+    let texto, abre = '';
     if (turno) texto = `Abierto ahora · cierra ${hhmm(turno[1])} h`;
     else {
       for (let i = 0; i < 7; i++) {
         const d = (dia + i) % 7, prox = HORARIOS[d].find(([a]) => i > 0 || a > hora);
-        if (prox) { texto = `Cerrado · abre ${i === 0 ? 'hoy' : i === 1 ? 'mañana' : 'el ' + DIAS[d]} ${hhmm(prox[0])} h`; break; }
+        if (prox) { abre = `abre ${i === 0 ? 'hoy' : i === 1 ? 'mañana' : 'el ' + DIAS[d]} ${hhmm(prox[0])} h`; break; }
       }
+      texto = `Cerrado · ${abre}`;
     }
     document.querySelectorAll('[data-estado]').forEach(el => { el.textContent = texto; el.classList.toggle('abierto', !!turno); });
+    // Pantalla amarilla detrás del hero
+    document.getElementById('detrasTitulo').textContent = turno ? 'Pasá, está abierto' : 'Ahora está cerrado';
+    document.getElementById('detrasEtiqueta').textContent = turno ? 'Ya estás adentro' : `Volvé pronto · ${abre}`;
     document.querySelectorAll('#horario li').forEach(li => li.classList.toggle('hoy', li.dataset.dias.split(',').includes(String(dia))));
   }
   estadoLocal();
