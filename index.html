@@ -304,7 +304,11 @@
   .mapa iframe { width: 100%; height: 340px; border: 2px solid var(--amarillo); border-radius: 6px; filter: grayscale(.2); }
   .dato strong { display: block; color: var(--amarillo); text-transform: uppercase; font-size: .8rem; letter-spacing: 1.5px; }
   footer { background: #000; color: #777; text-align: center; padding: 26px; font-size: .85rem; }
-  .revelar { opacity: 0; transform: translateY(40px); transition: opacity .6s, transform .6s; }
+  /* Aparición al entrar en pantalla (el JS agrega .visible y al terminar quita ambas clases) */
+  .revelar {
+    opacity: 0; transform: translateY(70px) scale(.95);
+    transition: opacity .75s cubic-bezier(.2,.7,.2,1), transform .75s cubic-bezier(.2,.7,.2,1);
+  }
   .revelar.visible { opacity: 1; transform: none; }
 
   @media (max-width: 720px) {
@@ -723,14 +727,26 @@
   });
   aplicarFuente(new URLSearchParams(location.search).get('fuente') || leer() || 'stencil');
 
-  // ---- Tarjetas que aparecen al entrar en pantalla ----
-  const io = new IntersectionObserver(ents => ents.forEach(en => {
-    if (en.isIntersecting) { en.target.classList.add('visible'); io.unobserve(en.target); }
-  }), { threshold: .15 });
-  document.querySelectorAll('.revelar').forEach((el, i) => {
-    el.style.transitionDelay = (i % 3) * 90 + 'ms';
-    io.observe(el);
-  });
+  // ---- Tarjetas y títulos que aparecen al entrar en pantalla ----
+  // Se disparan un poco adentro de la pantalla para que el movimiento se vea. Los que entran juntos
+  // (una fila de tarjetas en compu) aparecen en cascada. Al terminar se quitan las clases, así el
+  // hover de las tarjetas vuelve a su transición rápida.
+  document.querySelectorAll('.bloque .etiqueta, .bloque h2').forEach(el => el.classList.add('revelar'));
+  const io = new IntersectionObserver(ents => {
+    ents.filter(en => en.isIntersecting).forEach((en, n) => {
+      const el = en.target;
+      el.style.transitionDelay = n * 110 + 'ms';
+      el.classList.add('visible');
+      io.unobserve(el);
+      el.addEventListener('transitionend', function fin(e) {
+        if (e.propertyName !== 'transform') return;
+        el.classList.remove('revelar', 'visible');
+        el.style.transitionDelay = '';
+        el.removeEventListener('transitionend', fin);
+      });
+    });
+  }, { threshold: .15, rootMargin: '0px 0px -12% 0px' });
+  document.querySelectorAll('.revelar').forEach(el => io.observe(el));
 
   const nav = document.getElementById('nav');
   const escena = document.getElementById('inicio');
