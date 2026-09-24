@@ -101,15 +101,14 @@
     position: absolute; left: 0; right: 0; bottom: 0; height: 26px;
     background: repeating-linear-gradient(-45deg, var(--amarillo) 0 22px, var(--negro) 22px 44px);
   }
-  /* Clavo de costado, asomando del borde superior del cartel.
-     --salida: 1 = afuera (antes de scrollear), 0 = hundido al ras. La maneja el JS. */
-  /* El contenedor recorta al clavo por abajo: lo que queda fuera es lo que "entró" en la madera. */
+  /* Clavo de costado, asomando del borde superior del cartel. El contenedor lo recorta por abajo:
+     lo que queda fuera es lo que "entró" en la madera. El JS lo baja al hundirse. */
   .clavo {
     position: absolute; left: 24%; bottom: 100%; width: 26px; margin-left: -13px; pointer-events: none;
-    height: calc(var(--salida, 1) * 34px + 7px); overflow: hidden;
-    filter: drop-shadow(3px 3px 2px rgba(0,0,0,.55));
+    height: 41px; overflow: hidden;
   }
-  .clavo svg { position: absolute; left: 0; top: 0; width: 26px; height: 60px; }
+  /* Al hundirse, el clavo baja con transform (lo recorta el contenedor): no provoca relayout */
+  .clavo svg { position: absolute; left: 0; top: 0; width: 26px; height: 60px; will-change: transform; }
   /* Marca en la madera donde entra el clavo */
   .agujero {
     position: absolute; left: 24%; top: -2px; width: 16px; height: 5px; margin-left: -8px; border-radius: 50%;
@@ -248,10 +247,9 @@
     position: absolute; left: -97.5px; top: -480px; width: 207px; height: 481px; max-width: none;
     user-select: none; -webkit-user-drag: none;
   }
-  /* Sombra: copia del martillo en negro y desenfocada. Va en una capa aparte para que
-     la luz quede fija (si fuera un drop-shadow giraría junto con el martillo). */
+  /* Sombra: copia del martillo en negro y desenfocada (canvas pre-renderizado por el JS). Va en una
+     capa aparte para que la luz quede fija (si fuera un drop-shadow giraría junto con el martillo). */
   .martillo.sombra { z-index: 4; }
-  .martillo.sombra img { filter: brightness(0) blur(7px); }
   .chispa {
     position: absolute; width: 5px; height: 5px; border-radius: 50%; z-index: 6;
     background: #ffd54a; box-shadow: 0 0 6px #ffb300; pointer-events: none;
@@ -741,9 +739,13 @@
   if (reducir) { addEventListener('scroll', navSolida, { passive: true }); return; }
 
   // ---- Escena del martillo ----
+  // Rendimiento: donde el navegador soporta ScrollTimeline (Chrome/Android, Safari 26+), las poses se
+  // precalculan como keyframes atados al scroll y las anima el propio navegador, pegadas al dedo.
+  // En el resto se usa requestAnimationFrame. En ambos casos solo se animan transform y opacity.
   const stage = document.getElementById('stage');
   const panel = document.getElementById('panel');
   const clavo = document.getElementById('clavo');
+  const clavoSvg = clavo.querySelector('svg');
   const martillo = document.getElementById('martillo');
   const ctas = document.querySelector('.hero-ctas');
 
@@ -755,6 +757,7 @@
   const tramo = (p, a, b) => clamp01((p - a) / (b - a));
   const suave = t => t * t * (3 - 2 * t);
   const mezclar = (A, B, t) => ({ x: A.x + (B.x - A.x) * t, y: A.y + (B.y - A.y) * t, a: A.a + (B.a - A.a) * t });
+  const r2 = v => Math.round(v * 100) / 100;
 
   // Dónde tiene que estar la base del mango para que la cara caiga justo sobre el punto (cx, cy)
   function apoyar(cx, cy, ang, esc) {
@@ -762,60 +765,51 @@
     return { x: cx - esc * (CARA.x * c - CARA.y * s), y: cy - esc * (CARA.x * s + CARA.y * c), a: ang };
   }
 
-  let golpeado = false, pendiente = false, inercia = 0, ultimoY = scrollY;
-
-  // Capa de sombra (ver CSS de .martillo.sombra)
+  // Sombra: copia del martillo con la silueta negra desenfocada, pre-renderizada una vez en un canvas
+  // (un filter: blur en vivo se recalcula en cada cuadro y en celular es caro).
   const sombra = martillo.cloneNode(true);
   sombra.removeAttribute('id');
   sombra.classList.add('sombra');
-  sombra.querySelectorAll('[id]').forEach(el => el.removeAttribute('id'));
   stage.insertBefore(sombra, martillo);
+  const imgMartillo = martillo.querySelector('img');
+  imgMartillo.decode().catch(() => {}).then(() => {
+    const W = imgMartillo.naturalWidth, H = imgMartillo.naturalHeight, P = 30, esc = 207 / W;
+    const c = document.createElement('canvas');
+    c.width = W + 2 * P; c.height = H + 2 * P;
+    const x = c.getContext('2d');
+    x.shadowColor = '#000'; x.shadowBlur = 24; x.shadowOffsetX = 10000;  // se dibuja fuera y solo queda la sombra
+    x.drawImage(imgMartillo, P - 10000, P);
+    Object.assign(c.style, { position: 'absolute', left: (-97.5 - P * esc) + 'px', top: (-480 - P * esc) + 'px',
+      width: (W + 2 * P) * esc + 'px', height: (H + 2 * P) * esc + 'px' });
+    sombra.replaceChildren(c);
+  });
 
-  function chispas(x, y) {
-    for (let i = 0; i < 14; i++) {
-      const ch = document.createElement('div');
-      ch.className = 'chispa';
-      ch.style.left = x + 'px'; ch.style.top = y + 'px';
-      const ang = Math.random() * Math.PI * 2, d = 25 + Math.random() * 55;
-      ch.style.setProperty('--dx', Math.cos(ang) * d + 'px');
-      ch.style.setProperty('--dy', Math.sin(ang) * d + 'px');
-      stage.appendChild(ch);
-      setTimeout(() => ch.remove(), 600);
-    }
+  // Medidas que no cambian al scrollear: se toman una vez (y al cambiar tamaño o fuente), no en cada cuadro
+  let geo;
+  function medir() {
+    const pr = panel.getBoundingClientRect(), cr = clavo.getBoundingClientRect();
+    const vw = stage.clientWidth, vh = stage.clientHeight;
+    geo = { vw, vh, k: Math.min(1, Math.max(.6, vw / 1000)),  // k = escala del martillo
+      recorrido: escena.offsetHeight - vh,
+      cx: cr.left + cr.width / 2 - pr.left, borde: cr.bottom - pr.top,
+      ctasFondo: ctas.getBoundingClientRect().bottom - pr.top };
   }
 
-  function actualizar() {
-    pendiente = false;
-    const vw = stage.clientWidth, vh = stage.clientHeight;
-    const recorrido = escena.offsetHeight - vh;
-    const p = clamp01(scrollY / recorrido);
-    const k = Math.min(1, Math.max(.6, vw / 1000));  // escala del martillo
-
-    // Fases (p = progreso del scroll en la escena):
-    //   0–.05 reposo · .05–.28 se levanta · .28–.34 baja el golpe · .34–.36 el clavo se hunde
-    //   .36–1 el panel se desliza hacia abajo con el martillo apoyado
+  // Estado de toda la escena para un progreso p (0–1). Fases:
+  //   0–.05 reposo · .05–.28 se levanta · .28–.34 baja el golpe · .34–.36 el clavo se hunde
+  //   .36–1 el panel se desliza hacia abajo con el martillo apoyado
+  function escenaEn(p, inercia = 0) {
+    const { vw, vh, k, cx, borde } = geo;
     const salida = 1 - tramo(p, .335, .36);
-    clavo.style.setProperty('--salida', salida);
     const bajada = suave(tramo(p, .36, 1)) * (vh + 80);
-
-    // Clavo en coordenadas del panel (sin su desplazamiento): centro y borde del cartel
-    const pr = panel.getBoundingClientRect(), cr = clavo.getBoundingClientRect();
-    const cx = cr.left + cr.width / 2 - pr.left;
-    const borde = cr.bottom - pr.top;
     const cabeza = s => borde - (s * LARGO_CLAVO + CABEZA_CLAVO);  // y de la cabeza del clavo según cuánto asoma
 
     // En celular el martillo en reposo asoma por debajo de los botones del hero (486 = alto de la cabeza inclinada -22°)
     let reposoY = vh + 120 * k;
-    if (vw < 720) reposoY = Math.max(vh - 100, ctas.getBoundingClientRect().bottom - pr.top + 14) + 486 * k;
+    if (vw < 720) reposoY = Math.max(vh - 100, geo.ctasFondo + 14) + 486 * k;
     const reposo    = { x: vw - 70 * k, y: reposoY, a: -22 };
     const golpe     = apoyar(cx, cabeza(1), ANG_GOLPE, k);          // toca el clavo todavía afuera
     const levantado = { x: golpe.x + 30 * k, y: golpe.y + 10 * k, a: ANG_GOLPE + 50 };
-
-    // Inercia: al scrollear rápido el martillo se atrasa un poco y después se acomoda
-    const vel = scrollY - ultimoY;
-    ultimoY = scrollY;
-    const objetivo = p > .05 && p < .34 ? Math.max(-8, Math.min(8, -vel * .15)) : 0;
-    inercia += (objetivo - inercia) * .2;
 
     // altura: 0 = apoyado, 1 = levantado. Aleja la sombra y agranda el martillo (más cerca de la cámara)
     let pose, altura;
@@ -835,26 +829,96 @@
     const c = Math.cos(rad(pose.a)), sn = Math.sin(rad(pose.a));
     const fx = pose.x + k * (CARA.x * c - CARA.y * sn), fy = pose.y + k * (CARA.x * sn + CARA.y * c);
     const px = fx - esc / k * (fx - pose.x), py = fy - esc / k * (fy - pose.y);
-    martillo.style.transform = `translate(${px}px, ${py}px) rotate(${pose.a}deg) scale(${esc})`;
-    sombra.style.transform = `translate(${px + (6 + 34 * altura) * k}px, ${py + (10 + 46 * altura) * k}px) rotate(${pose.a}deg) scale(${esc})`;
-    sombra.style.opacity = .55 - .25 * altura;
-    panel.style.transform = bajada ? `translateY(${bajada}px)` : '';
+    const giro = `rotate(${r2(pose.a)}deg) scale(${r2(esc * 1000) / 1000})`;
+    return {
+      martillo: { transform: `translate(${r2(px)}px, ${r2(py)}px) ${giro}` },
+      sombra:   { transform: `translate(${r2(px + (6 + 34 * altura) * k)}px, ${r2(py + (10 + 46 * altura) * k)}px) ${giro}`, opacity: r2(.55 - .25 * altura) },
+      panel:    { transform: `translateY(${r2(bajada)}px)` },
+      clavo:    { transform: `translateY(${r2((1 - salida) * LARGO_CLAVO)}px)` },
+    };
+  }
+  const elementos = { martillo, sombra, panel, clavo: clavoSvg };
 
-    // Impacto: una sola vez al cruzar el golpe bajando
+  function chispas(x, y) {
+    for (let i = 0; i < 14; i++) {
+      const ch = document.createElement('div');
+      ch.className = 'chispa';
+      ch.style.left = x + 'px'; ch.style.top = y + 'px';
+      const ang = Math.random() * Math.PI * 2, d = 25 + Math.random() * 55;
+      ch.style.setProperty('--dx', Math.cos(ang) * d + 'px');
+      ch.style.setProperty('--dy', Math.sin(ang) * d + 'px');
+      stage.appendChild(ch);
+      setTimeout(() => ch.remove(), 600);
+    }
+  }
+
+  // Efectos puntuales (chispas, temblor) y nav: siguen en JS, son baratos
+  let golpeado = false;
+  function efectos(p) {
     if (p >= .34 && !golpeado) {
       golpeado = true;
-      chispas(cx, cabeza(1));
+      chispas(geo.cx, geo.borde - LARGO_CLAVO - CABEZA_CLAVO);
       stage.classList.remove('temblor'); void stage.offsetWidth; stage.classList.add('temblor');
     } else if (p < .31) golpeado = false;
-
     navSolida();
+  }
+  stage.addEventListener('animationend', e => { if (e.target === stage) stage.classList.remove('temblor'); });
+
+  const conTimeline = typeof ScrollTimeline === 'function';
+  let animaciones = [], pendiente = false, inercia = 0, ultimoY = scrollY;
+
+  // Modo 1: keyframes atados al scroll (los mueve el navegador, sin JS por cuadro)
+  function construirTimeline() {
+    animaciones.forEach(a => a.cancel());
+    const raiz = document.scrollingElement;
+    const maxScroll = raiz.scrollHeight - raiz.clientHeight;
+    if (maxScroll <= geo.recorrido) return;
+    // Más muestras alrededor del golpe, que es rápido
+    const ps = [];
+    for (let i = 0; i <= 160; i++) ps.push(i / 160);
+    for (let q = .26; q <= .47; q += .0025) ps.push(q);
+    const lista = [...new Set(ps.map(q => Math.round(q * 1e4) / 1e4))].sort((a, b) => a - b);
+    const tl = new ScrollTimeline({ source: raiz, axis: 'block' });
+    const cuadros = { martillo: [], sombra: [], panel: [], clavo: [] };
+    for (const q of lista) {
+      const e = escenaEn(q), offset = q * geo.recorrido / maxScroll;
+      for (const n in cuadros) cuadros[n].push({ ...e[n], offset });
+    }
+    const fin = escenaEn(1);
+    animaciones = Object.keys(cuadros).map(n => {
+      cuadros[n].push({ ...fin[n], offset: 1 });
+      elementos[n].style.transform = ''; elementos[n].style.opacity = '';
+      return elementos[n].animate(cuadros[n], { timeline: tl, fill: 'both', easing: 'linear' });
+    });
+  }
+
+  // Modo 2: requestAnimationFrame (navegadores sin ScrollTimeline). Suma una leve inercia.
+  function actualizar() {
+    pendiente = false;
+    const p = clamp01(scrollY / geo.recorrido);
+    const vel = scrollY - ultimoY;
+    ultimoY = scrollY;
+    const objetivo = p > .05 && p < .34 ? Math.max(-8, Math.min(8, -vel * .15)) : 0;
+    inercia += (objetivo - inercia) * .2;
+    const e = escenaEn(p, inercia);
+    for (const n in e) Object.assign(elementos[n].style, e[n]);
+    efectos(p);
     if (Math.abs(inercia) > .05) pedir();  // seguir hasta que la inercia se asiente
   }
   const pedir = () => { if (!pendiente) { pendiente = true; requestAnimationFrame(actualizar); } };
-  stage.addEventListener('animationend', e => { if (e.target === stage) stage.classList.remove('temblor'); });
-  addEventListener('scroll', pedir, { passive: true });
-  addEventListener('resize', pedir);
-  actualizar();
+
+  function preparar() {
+    medir();
+    if (conTimeline) { construirTimeline(); efectos(clamp01(scrollY / geo.recorrido)); }
+    else actualizar();
+  }
+  let reconstruir;
+  const alCambiar = () => { clearTimeout(reconstruir); reconstruir = setTimeout(preparar, 120); };
+  addEventListener('resize', alCambiar);
+  addEventListener('load', alCambiar);
+  new ResizeObserver(alCambiar).observe(document.body);  // si cambia el alto de la página, cambian los offsets
+  addEventListener('scroll', conTimeline ? () => efectos(clamp01(scrollY / geo.recorrido)) : pedir, { passive: true });
+  preparar();
 })();
 </script>
 </body>
