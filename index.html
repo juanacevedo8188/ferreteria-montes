@@ -171,9 +171,9 @@
     position: absolute; left: 0; top: 0; width: 0; height: 0; z-index: 5;
     transform-origin: 0 0; will-change: transform; pointer-events: none;
   }
-  /* martillo.png mide 360×513; la base del mango está en (176.5, 477) y se escala ×1.1 */
+  /* martillo.png mide 345×801; la base del mango está en (162.5, 800) y se escala ×0.6 */
   .martillo img {
-    position: absolute; left: -194px; top: -525px; width: 396px; height: 564px; max-width: none;
+    position: absolute; left: -97.5px; top: -480px; width: 207px; height: 481px; max-width: none;
     user-select: none; -webkit-user-drag: none;
   }
   /* Sombra: copia del martillo en negro y desenfocada. Va en una capa aparte para que
@@ -486,8 +486,8 @@
   const clavo = document.getElementById('clavo');
   const martillo = document.getElementById('martillo');
 
-  const CARA = { x: -130, y: -436 }; // centro de la cara de golpe (px de la foto ×1.1, desde la base del mango)
-  const ANG_GOLPE = -86;              // martillo casi horizontal, cara hacia abajo
+  const CARA = { x: -96, y: -452 };  // centro de la cara de golpe (px de la foto ×0.6, desde la base del mango)
+  const ANG_GOLPE = -92;              // martillo casi horizontal, cara hacia abajo
   const LARGO_CLAVO = 34, CABEZA_CLAVO = 7;  // px, iguales al CSS de .clavo
   const rad = d => d * Math.PI / 180;
   const clamp01 = v => Math.min(1, Math.max(0, v));
