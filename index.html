@@ -348,7 +348,7 @@
     <li><a href="#rubros">Rubros</a></li>
     <li><a href="#servicios">Servicios</a></li>
     <li><a href="#nosotros">Nosotros</a></li>
-    <li><a href="#ofertas">Ofertas</a></li>
+    <li id="navOfertas"><a href="#ofertas">Ofertas</a></li>
     <li><a href="#contacto">Contacto</a></li>
   </ul>
 </nav>
@@ -470,7 +470,8 @@
   <div class="contenedor">
     <div class="etiqueta">Esta semana</div>
     <h2>Ofertas</h2>
-    <div class="grilla">
+    <!-- Las ofertas se cargan desde ofertas.json. Estas tres quedan de respaldo si el archivo no carga. -->
+    <div class="grilla" id="grillaOfertas">
       <div class="card revelar"><span class="tag">-20%</span><h3>Taladro percutor 650W</h3><div class="antes">$ 95.000</div><div class="precio">$ 76.000</div></div>
       <div class="card revelar"><span class="tag">3x2</span><h3>Cinta aisladora 20 m</h3><div class="antes">$ 3.600 c/u</div><div class="precio">$ 7.200</div></div>
       <div class="card revelar"><span class="tag">-15%</span><h3>Látex interior 20 L</h3><div class="antes">$ 120.000</div><div class="precio">$ 102.000</div></div>
@@ -717,6 +718,38 @@
     });
   }, { threshold: .15, rootMargin: '0px 0px -12% 0px' });
   document.querySelectorAll('.revelar').forEach(el => io.observe(el));
+
+  // ---- Ofertas: se leen de ofertas.json (se edita desde GitHub, ver README) ----
+  // Campos: producto y precio obligatorios; etiqueta, antes y mostrar opcionales.
+  // Los precios pueden ser números (95000 → "$ 95.000") o texto libre ("$ 3.600 c/u").
+  const pesos = v => typeof v === 'number' ? '$ ' + v.toLocaleString('es-AR') : String(v);
+  fetch('ofertas.json', { cache: 'no-cache' })
+    .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(lista => {
+      if (!Array.isArray(lista)) throw new Error('ofertas.json tiene que ser una lista [ ... ]');
+      const validas = lista.filter(o => o && o.mostrar !== false && o.producto && o.precio != null);
+      // Sin ofertas vigentes: se oculta la sección y su link del menú
+      document.getElementById('ofertas').hidden = !validas.length;
+      document.getElementById('navOfertas').hidden = !validas.length;
+      const grilla = document.getElementById('grillaOfertas');
+      grilla.replaceChildren(...validas.map(o => {
+        const card = document.createElement('div');
+        card.className = 'card revelar';
+        const agregar = (tag, clase, texto) => {
+          const el = document.createElement(tag);
+          if (clase) el.className = clase;
+          el.textContent = texto;
+          card.appendChild(el);
+        };
+        if (o.etiqueta) agregar('span', 'tag', o.etiqueta);
+        agregar('h3', '', o.producto);
+        if (o.antes != null && o.antes !== '') agregar('div', 'antes', pesos(o.antes));
+        agregar('div', 'precio', pesos(o.precio));
+        io.observe(card);
+        return card;
+      }));
+    })
+    .catch(err => console.warn('No se pudieron cargar las ofertas, quedan las de respaldo:', err));
 
   const nav = document.getElementById('nav');
   const escena = document.getElementById('inicio');
