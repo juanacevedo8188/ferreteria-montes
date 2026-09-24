@@ -8,10 +8,10 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="theme-color" content="#1c1916">
 <meta name="description" content="Ferretera Montes, Blvd. Rondeau 762, Rosario. Tel 0341 323-3659. Herramientas, electricidad, plomería, pintura y bulonería.">
-<!-- Fuentes para probar con el selector. Cuando elijas una, dejá solo esas familias. -->
+<!-- Fuentes: Saira Stencil One (cartel), Saira (títulos), Barlow (texto) -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Stencil+One&amp;family=Saira:wght@800&amp;family=Barlow:wght@400;600;800&amp;family=Oswald:wght@500;700&amp;family=Bebas+Neue&amp;family=Work+Sans:wght@400;600;800&amp;family=Archivo+Black&amp;family=Archivo:wght@400;600;800&amp;family=Anton&amp;family=Barlow+Condensed:wght@500;700&amp;display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Stencil+One&amp;family=Saira:wght@800&amp;family=Barlow:wght@400;600;800&amp;display=swap">
 <style>
   :root {
     --amarillo: #f5b700;
@@ -19,10 +19,10 @@
     --negro: #1c1916;
     --chapa: #4a413b;
     --letra-cartel: #ece8e1;
-    /* Tipografía: la cambia el selector de fuentes */
-    --f-cartel: "Arial Black", Impact, system-ui, sans-serif; --w-cartel: 900;
-    --f-titulo: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; --w-titulo: 900;
-    --f-texto: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    /* Tipografía */
+    --f-cartel: "Saira Stencil One", "Arial Black", Impact, sans-serif; --w-cartel: 400;
+    --f-titulo: "Saira", system-ui, sans-serif; --w-titulo: 800;
+    --f-texto: "Barlow", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
     --gris: #2a2a2a;
     --gris-claro: #d9d6cf;
     --papel: #f4f1ea;
@@ -210,7 +210,7 @@
       position: fixed; left: 0; right: 0; bottom: auto; top: var(--vv-arriba, 0px);
       width: 100%; height: var(--vv-alto, 100dvh); border: 0; border-radius: 0; box-shadow: none;
     }
-    .chat.abierto .chat-abrir, body.chat-abierto .fuentes { display: none; }
+    .chat.abierto .chat-abrir { display: none; }
     .chat-cab { padding-top: max(12px, env(safe-area-inset-top)); }
     .chat-form { padding-bottom: env(safe-area-inset-bottom); }
     /* Opciones en una fila deslizable: con el teclado abierto no ocupan media pantalla */
@@ -218,26 +218,6 @@
     .chat-opciones::-webkit-scrollbar { display: none; }
   }
 
-  /* ---------- SELECTOR DE FUENTES (para probar; se puede borrar) ---------- */
-  .fuentes { position: fixed; left: 12px; bottom: 12px; z-index: 100; font: 14px/1.3 system-ui, sans-serif; }
-  .fuentes-toggle {
-    background: var(--amarillo); color: #1c1916; border: 2px solid #1c1916; border-radius: 999px;
-    padding: 8px 14px; font-weight: 800; cursor: pointer; box-shadow: 2px 3px 0 #1c1916;
-  }
-  .fuentes-panel {
-    position: absolute; left: 0; bottom: 48px; width: min(290px, calc(100vw - 24px));
-    background: #fff; color: #1c1916; border: 2px solid #1c1916; border-radius: 8px;
-    box-shadow: 4px 5px 0 #1c1916; padding: 8px; display: none;
-  }
-  .fuentes.abierto .fuentes-panel { display: block; }
-  .fuentes-panel button {
-    display: block; width: 100%; text-align: left; background: none; border: 0; border-radius: 5px;
-    padding: 8px 10px; cursor: pointer; color: inherit;
-  }
-  .fuentes-panel button:hover { background: #f4f1ea; }
-  .fuentes-panel button[aria-pressed="true"] { background: var(--amarillo); }
-  .fuentes-panel .muestra { display: block; font-size: 20px; line-height: 1.1; }
-  .fuentes-panel small { color: #555; font-size: 12px; }
   .lema { font-size: clamp(1.3rem, 3.4vw, 2.2rem); font-weight: 900; text-transform: uppercase; margin-bottom: 14px; }
   .letra { display: inline-block; opacity: 0; transform: translateY(-120px); animation: caer .55s cubic-bezier(.3,1.6,.5,1) forwards; }
   .amarillo { color: var(--amarillo); }
@@ -547,12 +527,6 @@
   <button class="chat-abrir" id="chatAbrir" aria-expanded="false" aria-controls="chatPanel"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20zm4.4-6c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.5.1l-.8.9c-.1.2-.3.2-.5.1a6.6 6.6 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.5-.4h-.5a.9.9 0 0 0-.6.3 2.7 2.7 0 0 0-.8 2c0 1.2.9 2.3 1 2.5.1.2 1.7 2.6 4.2 3.7 1.6.7 2.2.7 3 .6.5-.1 1.4-.6 1.6-1.1.2-.6.2-1 .1-1.1l-.4-.2z"/></svg><span>Consultá con Diego</span></button>
 </div>
 
-<!-- Selector de fuentes: probar combinaciones. Se puede borrar este bloque, su CSS y su JS. -->
-<div class="fuentes" id="fuentes">
-  <div class="fuentes-panel" id="fuentesPanel" role="group" aria-label="Elegir fuente"></div>
-  <button class="fuentes-toggle" id="fuentesToggle" aria-expanded="false">Aa Fuente</button>
-</div>
-
 <footer>© <span id="anio"></span> Ferretera Montes · Rosario</footer>
 
 <script>
@@ -720,45 +694,8 @@
   addEventListener('scroll', botonChat, { passive: true });
   botonChat();
 
-  // ---- Selector de fuentes (cartel / títulos / texto) ----
-  // Se recuerda la elección y también se puede compartir con ?fuente=stencil
-  const FUENTES = {
-    sistema:   { nombre: 'Actual (sistema)',   cartel: ['"Arial Black", Impact, sans-serif', 900], titulo: ['system-ui, sans-serif', 900],        texto: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif' },
-    stencil:   { nombre: 'Stencil (como el cartel)', cartel: ['"Saira Stencil One", sans-serif', 400], titulo: ['"Saira", sans-serif', 800], texto: '"Barlow", sans-serif' },
-    oswald:    { nombre: 'Industrial',          cartel: ['"Oswald", sans-serif', 700],            titulo: ['"Oswald", sans-serif', 700],          texto: '"Barlow", sans-serif' },
-    bebas:     { nombre: 'Condensada',          cartel: ['"Bebas Neue", sans-serif', 400],        titulo: ['"Bebas Neue", sans-serif', 400],      texto: '"Work Sans", sans-serif' },
-    archivo:   { nombre: 'Clásica de barrio',   cartel: ['"Archivo Black", sans-serif', 400],     titulo: ['"Archivo Black", sans-serif', 400],   texto: '"Archivo", sans-serif' },
-    anton:     { nombre: 'Afiche',              cartel: ['"Anton", sans-serif', 400],             titulo: ['"Anton", sans-serif', 400],           texto: '"Barlow Condensed", sans-serif' },
-  };
-  const raiz = document.documentElement.style;
-  const panelFuentes = document.getElementById('fuentesPanel');
-  const toggleFuentes = document.getElementById('fuentesToggle');
-  const leer = () => { try { return localStorage.getItem('fuente'); } catch { return null; } };
-  const guardar = v => { try { localStorage.setItem('fuente', v); } catch {} };
-
-  function aplicarFuente(clave) {
-    const fu = FUENTES[clave] || FUENTES.sistema;
-    raiz.setProperty('--f-cartel', fu.cartel[0]); raiz.setProperty('--w-cartel', fu.cartel[1]);
-    raiz.setProperty('--f-titulo', fu.titulo[0]); raiz.setProperty('--w-titulo', fu.titulo[1]);
-    raiz.setProperty('--f-texto', fu.texto);
-    panelFuentes.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.clave === clave));
-    guardar(clave);
-    // El clavo depende del tamaño del cartel: recalcular cuando la fuente termine de cargar
-    document.fonts && document.fonts.ready.then(() => dispatchEvent(new Event('resize')));
-  }
-  Object.entries(FUENTES).forEach(([clave, fu]) => {
-    const b = document.createElement('button');
-    b.dataset.clave = clave;
-    b.innerHTML = `<span class="muestra" style="font-family:${fu.cartel[0].replace(/"/g, "'")};font-weight:${fu.cartel[1]}">FERRETERA MONTES</span>
-      <small style="font-family:${fu.texto.replace(/"/g, "'")}">${fu.nombre} · Texto de ejemplo 123</small>`;
-    b.addEventListener('click', () => aplicarFuente(clave));
-    panelFuentes.appendChild(b);
-  });
-  toggleFuentes.addEventListener('click', () => {
-    const abierto = document.getElementById('fuentes').classList.toggle('abierto');
-    toggleFuentes.setAttribute('aria-expanded', abierto);
-  });
-  aplicarFuente(new URLSearchParams(location.search).get('fuente') || leer() || 'stencil');
+  // El clavo y los botones del hero dependen del tamaño del texto: re-medir cuando cargan las fuentes
+  if (document.fonts) document.fonts.ready.then(() => dispatchEvent(new Event('resize')));
 
   // ---- Tarjetas y títulos que aparecen al entrar en pantalla ----
   // Se disparan un poco adentro de la pantalla para que el movimiento se vea. Los que entran juntos
