@@ -188,13 +188,27 @@
   .contenedor { max-width: 1100px; margin: 0 auto; }
   .etiqueta { color: var(--amarillo-osc); font-weight: 800; letter-spacing: 2px; text-transform: uppercase; font-size: .8rem; }
   .bloque h2 { font-size: clamp(1.8rem, 4.5vw, 3rem); font-weight: 900; line-height: 1.05; margin: 8px 0 36px; text-transform: uppercase; }
-  .grilla { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 18px; }
+  .grilla { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  .grilla.dos { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 900px) { .grilla { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 600px) { .grilla, .grilla.dos { grid-template-columns: 1fr; } }
   .card {
     background: #fff; border: 2px solid var(--negro); border-radius: 6px; padding: 26px 22px;
     box-shadow: 6px 6px 0 var(--negro); transition: transform .2s, box-shadow .2s;
   }
   .card:hover { transform: translate(-3px,-3px); box-shadow: 9px 9px 0 var(--amarillo); }
-  .card .icono { font-size: 2rem; margin-bottom: 10px; }
+  .card .icono {
+    width: 52px; height: 52px; display: grid; place-items: center; margin-bottom: 16px;
+    background: var(--amarillo); border: 2px solid var(--negro); border-radius: 6px;
+  }
+  .card .icono svg { width: 28px; height: 28px; fill: none; stroke: var(--negro); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .horario { list-style: none; max-width: 340px; }
+  .horario li { display: flex; justify-content: space-between; gap: 16px; padding: 5px 0; border-bottom: 1px dashed rgba(255,255,255,.15); }
+  .horario li.hoy { color: var(--amarillo); font-weight: 700; }
+  .estado { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; }
+  .estado::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: #e0523f; box-shadow: 0 0 0 3px rgba(224,82,63,.25); }
+  .estado.abierto::before { background: #3fbf6a; box-shadow: 0 0 0 3px rgba(63,191,106,.25); }
+  .pre .estado { margin-left: 10px; letter-spacing: 1px; }
   .card h3 { font-size: 1.15rem; margin-bottom: 6px; }
   .card p { color: #555; font-size: .95rem; }
   .oscuro { background: var(--negro); color: #fff; }
@@ -259,7 +273,7 @@
     <div class="panel" id="panel">
       <div class="clavo" id="clavo"></div>
       <div class="hero-contenido">
-        <div class="pre">Blvd. Rondeau 762 · Rosario</div>
+        <div class="pre">Blvd. Rondeau 762 · Rosario <span class="estado" data-estado></span></div>
         <h1 class="cartel" id="titulo" aria-label="Ferretera Montes"><span class="palabra">FERRETERA</span><span class="m">M</span><span class="palabra">ONTES</span></h1>
         <div class="lema">Todo para tu <span class="amarillo">obra</span></div>
         <p>Herramientas, bulonería, electricidad, plomería y pintura. Si no lo tenemos, te lo conseguimos.</p>
@@ -345,12 +359,12 @@
     <div class="etiqueta">Qué vendemos</div>
     <h2>Rubros</h2>
     <div class="grilla">
-      <div class="card revelar"><div class="icono">🔨</div><h3>Herramientas</h3><p>Manuales y eléctricas: taladros, amoladoras, llaves, sierras.</p></div>
-      <div class="card revelar"><div class="icono">🔩</div><h3>Bulonería</h3><p>Tornillos, tarugos, bulones, arandelas. Suelto y por caja.</p></div>
-      <div class="card revelar"><div class="icono">💡</div><h3>Electricidad</h3><p>Cables, térmicas, tomas, iluminación LED.</p></div>
-      <div class="card revelar"><div class="icono">🚿</div><h3>Plomería</h3><p>Caños, conexiones, griferías, sellado.</p></div>
-      <div class="card revelar"><div class="icono">🎨</div><h3>Pintura</h3><p>Látex, esmaltes, impermeabilizantes, pinceles y rodillos.</p></div>
-      <div class="card revelar"><div class="icono">🌱</div><h3>Jardín</h3><p>Mangueras, herramientas de poda, riego.</p></div>
+      <div class="card revelar"><div class="icono"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 12-8.4 8.4a2.1 2.1 0 0 1-3-3L12 9"/><path d="m18 15 4-4"/><path d="m21.5 11.5-1.9-1.9A2 2 0 0 1 19 8.2V7l-2.3-2.3A6 6 0 0 0 12.5 3H9l.9.8A6.2 6.2 0 0 1 12 8.4V10l2 2h1.2a2 2 0 0 1 1.4.6l1.9 1.9"/></svg></div><h3>Herramientas</h3><p>Manuales y eléctricas: taladros, amoladoras, llaves, sierras.</p></div>
+      <div class="card revelar"><div class="icono"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5 20.2 7.2v9.6L12 21.5l-8.2-4.7V7.2z"/><circle cx="12" cy="12" r="3.5"/></svg></div><h3>Bulonería</h3><p>Tornillos, tarugos, bulones, arandelas. Suelto y por caja.</p></div>
+      <div class="card revelar"><div class="icono"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></div><h3>Electricidad</h3><p>Cables, térmicas, tomas, iluminación LED.</p></div>
+      <div class="card revelar"><div class="icono"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></svg></div><h3>Plomería</h3><p>Caños, conexiones, griferías, sellado.</p></div>
+      <div class="card revelar"><div class="icono"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="2" width="16" height="6" rx="2"/><path d="M10 16v-2a2 2 0 0 1 2-2h8a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="8" y="16" width="4" height="6" rx="1"/></svg></div><h3>Pintura</h3><p>Látex, esmaltes, impermeabilizantes, pinceles y rodillos.</p></div>
+      <div class="card revelar"><div class="icono"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 20h10"/><path d="M10 20c5.5-2.5.8-6.4 3-10"/><path d="M9.5 9.4c1.1.8 1.8 2.2 2.3 3.7-2 .4-3.5.4-4.8-.3-1.2-.6-2.3-1.9-3-4.2 2.8-.5 4.4 0 5.5.8z"/><path d="M14.1 6a7 7 0 0 0-1.1 4c1.9-.1 3.3-.6 4.3-1.4 1-1 1.6-2.3 1.7-4.6-2.7.1-4 1-4.9 2z"/></svg></div><h3>Jardín</h3><p>Mangueras, herramientas de poda, riego.</p></div>
     </div>
   </div>
 </section>
@@ -359,11 +373,9 @@
   <div class="contenedor">
     <div class="etiqueta">Además</div>
     <h2>Servicios</h2>
-    <div class="grilla">
-      <div class="card revelar"><div class="icono">🔑</div><h3>Copia de llaves</h3><p>Simples, doble paleta y de seguridad, en el momento.</p></div>
-      <div class="card revelar"><div class="icono">🪣</div><h3>Pintura a medida</h3><p>Preparamos el color que necesitás.</p></div>
-      <div class="card revelar"><div class="icono">🚚</div><h3>Entrega a domicilio</h3><p>Te llevamos el pedido. Consultá por teléfono.</p></div>
-      <div class="card revelar"><div class="icono">🧰</div><h3>Asesoramiento</h3><p>Traé la pieza o una foto y te decimos qué va.</p></div>
+    <div class="grilla dos">
+      <div class="card revelar"><div class="icono"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.7a1 1 0 0 0-.2-.6l-3.5-4.3A1 1 0 0 0 17.5 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg></div><h3>Entrega a domicilio</h3><p>Te llevamos el pedido. Consultá por teléfono.</p></div>
+      <div class="card revelar"><div class="icono"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22z"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 2.5-3 4"/><path d="M12 17h.01"/></svg></div><h3>Asesoramiento</h3><p>Traé la pieza o una foto y te decimos qué va.</p></div>
     </div>
   </div>
 </section>
@@ -389,8 +401,14 @@
     </div>
     <div>
       <div class="dato"><strong>Dirección</strong>Blvd. Rondeau 762, S2013HEU Rosario, Santa Fe</div>
-      <!-- TODO: confirmar días y hora de cierre de la tarde -->
-      <div class="dato"><strong>Horario</strong>Mañana hasta las 13 h · Tarde desde las 16:30 h</div>
+      <div class="dato"><strong>Horario</strong>
+        <ul class="horario" id="horario">
+          <li data-dias="1,2,3,4,5"><span>Lunes a viernes</span><span>8:30–13 · 16:30–18:30</span></li>
+          <li data-dias="6"><span>Sábado</span><span>9–13</span></li>
+          <li data-dias="0"><span>Domingo</span><span>Cerrado</span></li>
+        </ul>
+        <div class="estado" data-estado style="margin-top:10px"></div>
+      </div>
       <div class="dato"><strong>Teléfono</strong><a href="tel:+543413233659">0341 323-3659</a></div>
       <a class="btn" href="https://www.google.com/maps/search/?api=1&amp;query=Ferretera+Montes+Blvd.+Rondeau+762+Rosario" target="_blank" rel="noopener">Cómo llegar ↗</a>
     </div>
@@ -430,6 +448,32 @@
   mCartel.classList.add('m-cae');
   mCartel.style.animationDelay = (n * 45 + 150) + 'ms';
   document.getElementById('anio').textContent = new Date().getFullYear();
+
+  // ---- Abierto / cerrado según la hora de Argentina ----
+  const HORARIOS = { 0: [], 1: [[8.5, 13], [16.5, 18.5]], 2: [[8.5, 13], [16.5, 18.5]], 3: [[8.5, 13], [16.5, 18.5]],
+                     4: [[8.5, 13], [16.5, 18.5]], 5: [[8.5, 13], [16.5, 18.5]], 6: [[9, 13]] };
+  const DIAS = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+  const hhmm = h => `${Math.floor(h)}:${String(Math.round(h % 1 * 60)).padStart(2, '0')}`;
+  function estadoLocal() {
+    const partes = Object.fromEntries(new Intl.DateTimeFormat('en-US', {
+      timeZone: 'America/Argentina/Buenos_Aires', weekday: 'short', hour: 'numeric', minute: 'numeric', hourCycle: 'h23'
+    }).formatToParts(new Date()).map(p => [p.type, p.value]));
+    const dia = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].indexOf(partes.weekday);
+    const hora = +partes.hour + partes.minute / 60;
+    const turno = HORARIOS[dia].find(([a, b]) => hora >= a && hora < b);
+    let texto;
+    if (turno) texto = `Abierto ahora · cierra ${hhmm(turno[1])} h`;
+    else {
+      for (let i = 0; i < 7; i++) {
+        const d = (dia + i) % 7, prox = HORARIOS[d].find(([a]) => i > 0 || a > hora);
+        if (prox) { texto = `Cerrado · abre ${i === 0 ? 'hoy' : i === 1 ? 'mañana' : 'el ' + DIAS[d]} ${hhmm(prox[0])} h`; break; }
+      }
+    }
+    document.querySelectorAll('[data-estado]').forEach(el => { el.textContent = texto; el.classList.toggle('abierto', !!turno); });
+    document.querySelectorAll('#horario li').forEach(li => li.classList.toggle('hoy', li.dataset.dias.split(',').includes(String(dia))));
+  }
+  estadoLocal();
+  setInterval(estadoLocal, 60000);
 
   // ---- Selector de fuentes (cartel / títulos / texto) ----
   // Se recuerda la elección y también se puede compartir con ?fuente=stencil
