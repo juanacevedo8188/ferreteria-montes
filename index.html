@@ -65,7 +65,9 @@
      .escena es alta (da recorrido de scroll); .stage queda fija (sticky) mientras
      el martillo golpea el clavo del cartel, el clavo se hunde y el panel baja. */
   .escena { position: relative; height: 250vh; }
-  .stage { position: sticky; top: 0; height: 100vh; min-height: 520px; overflow: hidden; }
+  /* 100svh = alto visible con las barras del navegador a la vista. En iPhone 100vh es más alto
+     (cuenta las barras ocultas) y el contenido quedaba corrido hacia abajo. */
+  .stage { position: sticky; top: 0; height: 100vh; height: 100svh; min-height: 520px; overflow: hidden; }
 
   /* Lo que queda a la vista cuando el hero se va */
   .detras {
@@ -332,7 +334,7 @@
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     .escena { height: auto; }
-    .stage { position: relative; height: 100vh; }
+    .stage { position: relative; height: 100vh; height: 100svh; }
     .detras, .martillo, .scroll-hint { display: none; }
     .letra { animation: none; opacity: 1; transform: none; }
     .m-cae { animation: none; opacity: 1; }
