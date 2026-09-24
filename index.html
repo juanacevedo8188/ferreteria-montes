@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ferretera Montes</title>
+<meta name="description" content="Ferretera Montes, Blvd. Rondeau 762, Rosario. Tel 0341 323-3659. Herramientas, electricidad, plomería, pintura y bulonería.">
+<!-- Fuentes para probar con el selector. Cuando elijas una, dejá solo esas familias. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Stencil+One&amp;family=Saira:wght@800&amp;family=Barlow:wght@400;600;800&amp;family=Oswald:wght@500;700&amp;family=Bebas+Neue&amp;family=Work+Sans:wght@400;600;800&amp;family=Archivo+Black&amp;family=Archivo:wght@400;600;800&amp;family=Anton&amp;family=Barlow+Condensed:wght@500;700&amp;display=swap">
+<style>
+  :root {
+    --amarillo: #f5b700;
+    --amarillo-osc: #c99600;
+    --negro: #1c1916;
+    --chapa: #4a413b;
+    --letra-cartel: #ece8e1;
+    /* Tipografía: la cambia el selector de fuentes */
+    --f-cartel: "Arial Black", Impact, system-ui, sans-serif; --w-cartel: 900;
+    --f-titulo: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; --w-titulo: 900;
+    --f-texto: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --gris: #2a2a2a;
+    --gris-claro: #d9d6cf;
+    --papel: #f4f1ea;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--f-texto);
+    background: var(--papel);
+    color: var(--negro);
+    line-height: 1.5;
+    overflow-x: hidden;
+  }
+  a { color: inherit; }
+
+  /* ---------- NAV ---------- */
+  nav {
+    position: fixed; inset: 0 0 auto 0; z-index: 50;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 14px 24px; transition: background .3s, box-shadow .3s;
+  }
+  nav.solida { background: var(--negro); box-shadow: 0 2px 0 var(--amarillo); }
+  .logo {
+    display: inline-flex; align-items: center; text-decoration: none;
+    background: var(--chapa); color: var(--letra-cartel); padding: 4px 10px; border-radius: 3px;
+    font: var(--w-cartel) 1rem/1 var(--f-cartel); letter-spacing: 2px;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.08), 0 2px 6px rgba(0,0,0,.4);
+  }
+  /* La M en el cuadrado amarillo inclinado, como en el cartel del local */
+  .m {
+    display: inline-grid; place-items: center; background: var(--amarillo); color: var(--chapa);
+    width: 1.55em; height: 1.55em; margin: -.3em .12em -.3em .25em; font-size: 1.25em; letter-spacing: 0;
+    transform: rotate(10deg); border-radius: 2px; box-shadow: 1px 2px 3px rgba(0,0,0,.45);
+  }
+  nav ul { list-style: none; display: flex; gap: 22px; }
+  nav ul a { color: #fff; text-decoration: none; font-weight: 600; font-size: .95rem; }
+  nav ul a:hover { color: var(--amarillo); }
+
+  /* ---------- ESCENA DEL HERO ----------
+     .escena es alta (da recorrido de scroll); .stage queda fija (sticky) mientras
+     el martillo engancha el clavo y tira el panel hacia abajo. */
+  .escena { position: relative; height: 250vh; }
+  .stage { position: sticky; top: 0; height: 100vh; min-height: 520px; overflow: hidden; }
+
+  /* Lo que queda a la vista cuando el hero se va */
+  .detras {
+    position: absolute; inset: 0; display: grid; place-items: center; text-align: center; padding: 0 24px;
+    background:
+      radial-gradient(circle, rgba(0,0,0,.18) 2px, transparent 2.5px) 0 0 / 28px 28px,
+      var(--amarillo);
+  }
+  .detras h2 { font-size: clamp(2.2rem, 7vw, 5rem); line-height: 1; margin: 10px 0 26px; }
+  .stats { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; margin-bottom: 30px; }
+  .stats div { background: var(--negro); color: #fff; padding: 12px 18px; border-radius: 4px; font-size: .9rem; }
+  .stats b { display: block; color: var(--amarillo); font-size: 1.5rem; line-height: 1.1; }
+  .detras .btn { background: var(--negro); color: #fff; box-shadow: 4px 4px 0 #000; }
+  .detras .etiqueta { color: var(--negro); }
+
+  .panel {
+    position: absolute; inset: 0; background: var(--negro); color: #fff;
+    display: grid; place-items: center; text-align: center;
+    box-shadow: 0 -30px 60px rgba(0,0,0,.5); will-change: transform;
+  }
+  .panel::before { /* textura de rayas */
+    content: ""; position: absolute; inset: 0;
+    background:
+      repeating-linear-gradient(-45deg, transparent 0 40px, rgba(245,183,0,.06) 40px 80px),
+      radial-gradient(circle at 50% 40%, #2b2b2b, transparent 70%);
+  }
+  .stage.temblor { animation: temblor .35s; } /* sacude toda la escena, no pisa el transform del panel */
+  @keyframes temblor {
+    20% { transform: translate(-6px, 4px); } 40% { transform: translate(5px, -3px); }
+    60% { transform: translate(-3px, 2px); } 80% { transform: translate(2px, -1px); }
+  }
+  .cinta {
+    position: absolute; left: 0; right: 0; bottom: 0; height: 26px;
+    background: repeating-linear-gradient(-45deg, var(--amarillo) 0 22px, var(--negro) 22px 44px);
+  }
+  .clavo {
+    position: absolute; left: 50%; top: 20%; width: 30px; height: 30px; margin: -15px 0 0 -15px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #fff, #c9d0d6 25%, #7d868e 60%, #3c4247);
+    box-shadow: 0 0 0 2px #1d1f21, 3px 5px 6px rgba(0,0,0,.6);
+  }
+  .clavo::after { /* marcas del cabezal */
+    content: ""; position: absolute; inset: 7px; border-radius: 50%;
+    background: repeating-conic-gradient(rgba(0,0,0,.18) 0 10deg, transparent 10deg 20deg);
+  }
+  .hero-contenido { position: relative; padding: 70px 24px 0; }
+  .pre { color: var(--amarillo); font-weight: 700; letter-spacing: 3px; text-transform: uppercase; font-size: .85rem; }
+  .cartel {
+    display: inline-flex; align-items: center; margin: 22px 0 22px;
+    font: var(--w-cartel) clamp(1.3rem, 5.6vw, 4.4rem)/1 var(--f-cartel);
+    letter-spacing: .12em; color: var(--letra-cartel);
+    padding: .45em .6em; border-radius: 4px;
+    background:
+      repeating-linear-gradient(90deg, rgba(255,255,255,.025) 0 2px, transparent 2px 9px),
+      linear-gradient(180deg, #564b44, var(--chapa) 45%, #3b332e);
+    box-shadow: inset 0 0 0 2px rgba(0,0,0,.35), 0 18px 30px rgba(0,0,0,.55);
+  }
+  .cartel .m { font-size: 1.35em; }
+  .cartel .palabra { white-space: nowrap; }
+  .lema, .bloque h2, .detras h2, .stats b, .precio, .card h3 { font-family: var(--f-titulo); font-weight: var(--w-titulo); }
+
+  /* ---------- SELECTOR DE FUENTES (para probar; se puede borrar) ---------- */
+  .fuentes { position: fixed; left: 12px; bottom: 12px; z-index: 100; font: 14px/1.3 system-ui, sans-serif; }
+  .fuentes-toggle {
+    background: var(--amarillo); color: #1c1916; border: 2px solid #1c1916; border-radius: 999px;
+    padding: 8px 14px; font-weight: 800; cursor: pointer; box-shadow: 2px 3px 0 #1c1916;
+  }
+  .fuentes-panel {
+    position: absolute; left: 0; bottom: 48px; width: min(290px, calc(100vw - 24px));
+    background: #fff; color: #1c1916; border: 2px solid #1c1916; border-radius: 8px;
+    box-shadow: 4px 5px 0 #1c1916; padding: 8px; display: none;
+  }
+  .fuentes.abierto .fuentes-panel { display: block; }
+  .fuentes-panel button {
+    display: block; width: 100%; text-align: left; background: none; border: 0; border-radius: 5px;
+    padding: 8px 10px; cursor: pointer; color: inherit;
+  }
+  .fuentes-panel button:hover { background: #f4f1ea; }
+  .fuentes-panel button[aria-pressed="true"] { background: var(--amarillo); }
+  .fuentes-panel .muestra { display: block; font-size: 20px; line-height: 1.1; }
+  .fuentes-panel small { color: #555; font-size: 12px; }
+  .lema { font-size: clamp(1.3rem, 3.4vw, 2.2rem); font-weight: 900; text-transform: uppercase; margin-bottom: 14px; }
+  .letra { display: inline-block; opacity: 0; transform: translateY(-120px); animation: caer .55s cubic-bezier(.3,1.6,.5,1) forwards; }
+  .amarillo { color: var(--amarillo); }
+  @keyframes caer { to { opacity: 1; transform: translateY(0); } }
+  .m-cae { opacity: 0; animation: caerM .6s cubic-bezier(.3,1.7,.5,1) forwards; }
+  @keyframes caerM { from { opacity: 0; transform: translateY(-160px) rotate(-30deg); } to { opacity: 1; transform: rotate(10deg); } }
+  .panel p { max-width: 520px; margin: 0 auto 30px; color: var(--gris-claro); font-size: 1.1rem; }
+  .scroll-hint {
+    position: absolute; bottom: 48px; left: 50%; transform: translateX(-50%);
+    color: var(--gris-claro); font-size: .8rem; letter-spacing: 2px; text-transform: uppercase;
+    animation: flotar 1.6s ease-in-out infinite;
+  }
+  @keyframes flotar { 50% { transform: translate(-50%, 8px); } }
+
+  /* ---------- MARTILLO ----------
+     .martillo se ubica en el punto de agarre (base del mango) y rota desde ahí. */
+  .martillo {
+    position: absolute; left: 0; top: 0; width: 0; height: 0; z-index: 5;
+    transform-origin: 0 0; will-change: transform; pointer-events: none;
+  }
+  .martillo svg {
+    position: absolute; left: -120px; top: -410px; width: 240px; height: 420px; overflow: visible;
+    filter: drop-shadow(10px 14px 8px rgba(0,0,0,.55));
+  }
+  .martillo.reposo svg { animation: balanceo 2.4s ease-in-out infinite; transform-origin: 120px 410px; }
+  @keyframes balanceo { 50% { transform: rotate(-4deg); } }
+  .chispa {
+    position: absolute; width: 5px; height: 5px; border-radius: 50%; z-index: 6;
+    background: #ffd54a; box-shadow: 0 0 6px #ffb300; pointer-events: none;
+    animation: chispa .5s ease-out forwards;
+  }
+  @keyframes chispa { to { transform: translate(var(--dx), var(--dy)); opacity: 0; } }
+
+  /* ---------- BOTONES / SECCIONES ---------- */
+  .btn {
+    display: inline-block; background: var(--amarillo); color: var(--negro);
+    font-weight: 800; padding: 14px 28px; border-radius: 4px; text-decoration: none;
+    box-shadow: 4px 4px 0 var(--amarillo-osc); transition: transform .15s, box-shadow .15s;
+  }
+  .btn:hover { transform: translate(2px,2px); box-shadow: 2px 2px 0 var(--amarillo-osc); }
+
+  section.bloque { padding: 110px 24px; }
+  .contenedor { max-width: 1100px; margin: 0 auto; }
+  .etiqueta { color: var(--amarillo-osc); font-weight: 800; letter-spacing: 2px; text-transform: uppercase; font-size: .8rem; }
+  .bloque h2 { font-size: clamp(1.8rem, 4.5vw, 3rem); font-weight: 900; line-height: 1.05; margin: 8px 0 36px; text-transform: uppercase; }
+  .grilla { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 18px; }
+  .card {
+    background: #fff; border: 2px solid var(--negro); border-radius: 6px; padding: 26px 22px;
+    box-shadow: 6px 6px 0 var(--negro); transition: transform .2s, box-shadow .2s;
+  }
+  .card:hover { transform: translate(-3px,-3px); box-shadow: 9px 9px 0 var(--amarillo); }
+  .card .icono { font-size: 2rem; margin-bottom: 10px; }
+  .card h3 { font-size: 1.15rem; margin-bottom: 6px; }
+  .card p { color: #555; font-size: .95rem; }
+  .oscuro { background: var(--negro); color: #fff; }
+  .oscuro .card { background: var(--gris); color: #fff; border-color: var(--amarillo); box-shadow: 6px 6px 0 var(--amarillo); }
+  .oscuro .card p { color: var(--gris-claro); }
+  .ofertas .precio { font-size: 1.8rem; font-weight: 900; margin-top: 10px; }
+  .ofertas .antes { text-decoration: line-through; color: #888; font-size: .9rem; }
+  .ofertas .tag { display: inline-block; background: var(--amarillo); font-weight: 800; font-size: .75rem; padding: 3px 8px; border-radius: 3px; margin-bottom: 8px; }
+  .contacto-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 30px; }
+  .dato { margin-bottom: 18px; }
+  .mapa { grid-column: 1 / -1; }
+  .mapa iframe { width: 100%; height: 340px; border: 2px solid var(--amarillo); border-radius: 6px; filter: grayscale(.2); }
+  .dato strong { display: block; color: var(--amarillo); text-transform: uppercase; font-size: .8rem; letter-spacing: 1.5px; }
+  footer { background: #000; color: #777; text-align: center; padding: 26px; font-size: .85rem; }
+  .revelar { opacity: 0; transform: translateY(40px); transition: opacity .6s, transform .6s; }
+  .revelar.visible { opacity: 1; transform: none; }
+
+  @media (max-width: 720px) {
+    nav ul { display: none; }
+    .cartel { font-size: 4.4vw; letter-spacing: .06em; padding: .5em .7em; }
+    section.bloque { padding-top: 80px; padding-bottom: 80px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .escena { height: auto; }
+    .stage { position: relative; height: 100vh; }
+    .detras, .martillo, .scroll-hint { display: none; }
+    .letra { animation: none; opacity: 1; transform: none; }
+    .m-cae { animation: none; opacity: 1; }
+    .revelar { opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <a href="#inicio" class="logo" aria-label="Ferretera Montes">FERRETERA<span class="m">M</span>ONTES</a>
+  <ul>
+    <li><a href="#rubros">Rubros</a></li>
+    <li><a href="#servicios">Servicios</a></li>
+    <li><a href="#ofertas">Ofertas</a></li>
+    <li><a href="#contacto">Contacto</a></li>
+  </ul>
+</nav>
+
+<header class="escena" id="inicio">
+  <div class="stage" id="stage">
+
+    <div class="detras">
+      <div>
+        <div class="etiqueta">Ya estás adentro</div>
+        <h2>Pasá, está abierto</h2>
+        <div class="stats">
+          <div><b>4.8 ★</b>58 reseñas en Google</div>
+          <div><b>Envíos</b>entrega a domicilio</div>
+          <div><b>Rondeau 762</b>Rosario, Santa Fe</div>
+        </div>
+        <a href="#rubros" class="btn">Ver rubros ↓</a>
+      </div>
+    </div>
+
+    <div class="panel" id="panel">
+      <div class="clavo" id="clavo"></div>
+      <div class="hero-contenido">
+        <div class="pre">Blvd. Rondeau 762 · Rosario</div>
+        <h1 class="cartel" id="titulo" aria-label="Ferretera Montes"><span class="palabra">FERRETERA</span><span class="m">M</span><span class="palabra">ONTES</span></h1>
+        <div class="lema">Todo para tu <span class="amarillo">obra</span></div>
+        <p>Herramientas, bulonería, electricidad, plomería y pintura. Si no lo tenemos, te lo conseguimos.</p>
+      </div>
+      <div class="scroll-hint">Deslizá ↓</div>
+      <div class="cinta"></div>
+    </div>
+
+    <!-- Martillo de uña. Origen (0,0) = base del mango; la cabeza queda hacia arriba. -->
+    <div class="martillo reposo" id="martillo" aria-hidden="true">
+      <svg viewBox="-120 -410 240 420">
+        <defs>
+          <linearGradient id="gMadera" x1="0" x2="1">
+            <stop offset="0" stop-color="#6d3f1b"/><stop offset=".3" stop-color="#b7773c"/>
+            <stop offset=".5" stop-color="#e2ab6c"/><stop offset=".72" stop-color="#b16f36"/>
+            <stop offset="1" stop-color="#5e3415"/>
+          </linearGradient>
+          <linearGradient id="gGoma" x1="0" x2="1">
+            <stop offset="0" stop-color="#0b0b0b"/><stop offset=".4" stop-color="#3d3d3d"/>
+            <stop offset=".6" stop-color="#222"/><stop offset="1" stop-color="#080808"/>
+          </linearGradient>
+          <linearGradient id="gAcero" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#f4f7f9"/><stop offset=".22" stop-color="#bcc5cc"/>
+            <stop offset=".55" stop-color="#6c767e"/><stop offset=".78" stop-color="#a9b3bb"/>
+            <stop offset="1" stop-color="#454d53"/>
+          </linearGradient>
+          <linearGradient id="gCara" x1="0" x2="1">
+            <stop offset="0" stop-color="#4c555c"/><stop offset=".45" stop-color="#e3e8eb"/>
+            <stop offset="1" stop-color="#7f8a92"/>
+          </linearGradient>
+          <linearGradient id="gUna" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#dfe5e9"/><stop offset=".5" stop-color="#7b858d"/>
+            <stop offset="1" stop-color="#3f464c"/>
+          </linearGradient>
+        </defs>
+
+        <!-- mango de madera -->
+        <path d="M-17 -8 Q-19 -170 -12 -330 L12 -330 Q19 -170 17 -8 Q0 6 -17 -8Z"
+              fill="url(#gMadera)" stroke="#3b220e" stroke-width="1.5"/>
+        <g stroke="#5a3214" stroke-width=".8" fill="none" opacity=".55">
+          <path d="M-8 -130 Q-10 -230 -6 -325"/><path d="M3 -130 Q6 -220 2 -325"/>
+          <path d="M9 -130 Q12 -250 7 -325"/><path d="M-3 -180 q2 -30 -1 -60"/>
+        </g>
+        <path d="M-10 -135 Q-12 -230 -7 -326" stroke="#fff" stroke-opacity=".25" stroke-width="3" fill="none"/>
+
+        <!-- empuñadura de goma con estrías -->
+        <path d="M-21 -6 Q-23 -68 -19 -132 L19 -132 Q23 -68 21 -6 Q0 12 -21 -6Z"
+              fill="url(#gGoma)" stroke="#000" stroke-width="1.5"/>
+        <g stroke="#000" stroke-width="3" opacity=".6">
+          <line x1="-21" y1="-22" x2="21" y2="-22"/><line x1="-21" y1="-36" x2="21" y2="-36"/>
+          <line x1="-21" y1="-50" x2="21" y2="-50"/><line x1="-21" y1="-64" x2="21" y2="-64"/>
+          <line x1="-21" y1="-78" x2="21" y2="-78"/><line x1="-20" y1="-92" x2="20" y2="-92"/>
+          <line x1="-20" y1="-106" x2="20" y2="-106"/>
+        </g>
+        <path d="M-12 -12 Q-14 -70 -11 -126" stroke="#fff" stroke-opacity=".18" stroke-width="3" fill="none"/>
+        <rect x="-21" y="-138" width="42" height="9" rx="3" fill="#f5b700" stroke="#000" stroke-width="1.2"/>
+
+        <!-- cabeza: cuello + ojo -->
+        <path d="M-44 -374 H28 Q42 -374 46 -362 L46 -338 Q42 -326 28 -326 H-44Z"
+              fill="url(#gAcero)" stroke="#23282c" stroke-width="1.5"/>
+        <rect x="-12" y="-378" width="24" height="6" rx="1" fill="#8a5427" stroke="#3b220e"/>
+        <line x1="-8" y1="-378" x2="8" y2="-372" stroke="#555" stroke-width="2"/>
+        <!-- cuello hacia la cara -->
+        <path d="M-44 -368 L-80 -372 L-80 -328 L-44 -332Z" fill="url(#gAcero)" stroke="#23282c" stroke-width="1.5"/>
+        <!-- cara de golpe -->
+        <rect x="-100" y="-384" width="22" height="68" rx="6" fill="url(#gCara)" stroke="#23282c" stroke-width="1.5"/>
+        <rect x="-103" y="-380" width="5" height="60" rx="2" fill="#dfe5e9" stroke="#23282c"/>
+        <!-- uña curva, con la ranura en V -->
+        <path d="M28 -374 Q82 -376 110 -298 L98 -292 Q76 -344 28 -338Z"
+              fill="url(#gUna)" stroke="#23282c" stroke-width="1.5"/>
+        <path d="M44 -357 Q78 -350 100 -300" stroke="#1d2226" stroke-width="3" fill="none"/>
+        <!-- brillos -->
+        <path d="M-40 -371 H26" stroke="#fff" stroke-opacity=".8" stroke-width="1.5"/>
+        <path d="M32 -371 Q78 -370 104 -304" stroke="#fff" stroke-opacity=".55" stroke-width="1.2" fill="none"/>
+      </svg>
+    </div>
+
+  </div>
+</header>
+
+<section class="bloque" id="rubros">
+  <div class="contenedor">
+    <div class="etiqueta">Qué vendemos</div>
+    <h2>Rubros</h2>
+    <div class="grilla">
+      <div class="card revelar"><div class="icono">🔨</div><h3>Herramientas</h3><p>Manuales y eléctricas: taladros, amoladoras, llaves, sierras.</p></div>
+      <div class="card revelar"><div class="icono">🔩</div><h3>Bulonería</h3><p>Tornillos, tarugos, bulones, arandelas. Suelto y por caja.</p></div>
+      <div class="card revelar"><div class="icono">💡</div><h3>Electricidad</h3><p>Cables, térmicas, tomas, iluminación LED.</p></div>
+      <div class="card revelar"><div class="icono">🚿</div><h3>Plomería</h3><p>Caños, conexiones, griferías, sellado.</p></div>
+      <div class="card revelar"><div class="icono">🎨</div><h3>Pintura</h3><p>Látex, esmaltes, impermeabilizantes, pinceles y rodillos.</p></div>
+      <div class="card revelar"><div class="icono">🌱</div><h3>Jardín</h3><p>Mangueras, herramientas de poda, riego.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="bloque oscuro" id="servicios">
+  <div class="contenedor">
+    <div class="etiqueta">Además</div>
+    <h2>Servicios</h2>
+    <div class="grilla">
+      <div class="card revelar"><div class="icono">🔑</div><h3>Copia de llaves</h3><p>Simples, doble paleta y de seguridad, en el momento.</p></div>
+      <div class="card revelar"><div class="icono">🪣</div><h3>Pintura a medida</h3><p>Preparamos el color que necesitás.</p></div>
+      <div class="card revelar"><div class="icono">🚚</div><h3>Entrega a domicilio</h3><p>Te llevamos el pedido. Consultá por teléfono.</p></div>
+      <div class="card revelar"><div class="icono">🧰</div><h3>Asesoramiento</h3><p>Traé la pieza o una foto y te decimos qué va.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="bloque ofertas" id="ofertas">
+  <div class="contenedor">
+    <div class="etiqueta">Esta semana</div>
+    <h2>Ofertas</h2>
+    <div class="grilla">
+      <div class="card revelar"><span class="tag">-20%</span><h3>Taladro percutor 650W</h3><div class="antes">$ 95.000</div><div class="precio">$ 76.000</div></div>
+      <div class="card revelar"><span class="tag">3x2</span><h3>Cinta aisladora 20 m</h3><div class="antes">$ 3.600 c/u</div><div class="precio">$ 7.200</div></div>
+      <div class="card revelar"><span class="tag">-15%</span><h3>Látex interior 20 L</h3><div class="antes">$ 120.000</div><div class="precio">$ 102.000</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="bloque oscuro" id="contacto">
+  <div class="contenedor contacto-grid">
+    <div>
+      <div class="etiqueta">Vení o llamanos</div>
+      <h2>Contacto</h2>
+      <a class="btn" href="tel:+543413233659">Llamar: 0341 323-3659</a>
+    </div>
+    <div>
+      <div class="dato"><strong>Dirección</strong>Blvd. Rondeau 762, S2013HEU Rosario, Santa Fe</div>
+      <!-- TODO: confirmar días y hora de cierre de la tarde -->
+      <div class="dato"><strong>Horario</strong>Mañana hasta las 13 h · Tarde desde las 16:30 h</div>
+      <div class="dato"><strong>Teléfono</strong><a href="tel:+543413233659">0341 323-3659</a></div>
+      <a class="btn" href="https://www.google.com/maps/search/?api=1&amp;query=Ferretera+Montes+Blvd.+Rondeau+762+Rosario" target="_blank" rel="noopener">Cómo llegar ↗</a>
+    </div>
+    <div class="mapa">
+      <iframe title="Ubicación de Ferretera Montes" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+        src="https://maps.google.com/maps?q=-32.9077836,-60.6880697&amp;z=17&amp;output=embed"></iframe>
+    </div>
+  </div>
+</section>
+
+<!-- Selector de fuentes: probar combinaciones. Se puede borrar este bloque, su CSS y su JS. -->
+<div class="fuentes" id="fuentes">
+  <div class="fuentes-panel" id="fuentesPanel" role="group" aria-label="Elegir fuente"></div>
+  <button class="fuentes-toggle" id="fuentesToggle" aria-expanded="false">Aa Fuente</button>
+</div>
+
+<footer>© <span id="anio"></span> Ferretera Montes · Rosario</footer>
+
+<script>
+(() => {
+  const reducir = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ---- Cartel: letras que caen y la M amarilla al final ----
+  let n = 0;
+  document.querySelectorAll('#titulo .palabra').forEach(palabra => {
+    const texto = palabra.textContent;
+    palabra.textContent = '';
+    [...texto].forEach(c => {
+      const s = document.createElement('span');
+      s.className = 'letra';
+      s.textContent = c;
+      s.style.animationDelay = (n++ * 45) + 'ms';
+      palabra.appendChild(s);
+    });
+  });
+  const mCartel = document.querySelector('#titulo .m');
+  mCartel.classList.add('m-cae');
+  mCartel.style.animationDelay = (n * 45 + 150) + 'ms';
+  document.getElementById('anio').textContent = new Date().getFullYear();
+
+  // ---- Selector de fuentes (cartel / títulos / texto) ----
+  // Se recuerda la elección y también se puede compartir con ?fuente=stencil
+  const FUENTES = {
+    sistema:   { nombre: 'Actual (sistema)',   cartel: ['"Arial Black", Impact, sans-serif', 900], titulo: ['system-ui, sans-serif', 900],        texto: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif' },
+    stencil:   { nombre: 'Stencil (como el cartel)', cartel: ['"Saira Stencil One", sans-serif', 400], titulo: ['"Saira", sans-serif', 800], texto: '"Barlow", sans-serif' },
+    oswald:    { nombre: 'Industrial',          cartel: ['"Oswald", sans-serif', 700],            titulo: ['"Oswald", sans-serif', 700],          texto: '"Barlow", sans-serif' },
+    bebas:     { nombre: 'Condensada',          cartel: ['"Bebas Neue", sans-serif', 400],        titulo: ['"Bebas Neue", sans-serif', 400],      texto: '"Work Sans", sans-serif' },
+    archivo:   { nombre: 'Clásica de barrio',   cartel: ['"Archivo Black", sans-serif', 400],     titulo: ['"Archivo Black", sans-serif', 400],   texto: '"Archivo", sans-serif' },
+    anton:     { nombre: 'Afiche',              cartel: ['"Anton", sans-serif', 400],             titulo: ['"Anton", sans-serif', 400],           texto: '"Barlow Condensed", sans-serif' },
+  };
+  const raiz = document.documentElement.style;
+  const panelFuentes = document.getElementById('fuentesPanel');
+  const toggleFuentes = document.getElementById('fuentesToggle');
+  const leer = () => { try { return localStorage.getItem('fuente'); } catch { return null; } };
+  const guardar = v => { try { localStorage.setItem('fuente', v); } catch {} };
+
+  function aplicarFuente(clave) {
+    const fu = FUENTES[clave] || FUENTES.sistema;
+    raiz.setProperty('--f-cartel', fu.cartel[0]); raiz.setProperty('--w-cartel', fu.cartel[1]);
+    raiz.setProperty('--f-titulo', fu.titulo[0]); raiz.setProperty('--w-titulo', fu.titulo[1]);
+    raiz.setProperty('--f-texto', fu.texto);
+    panelFuentes.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.clave === clave));
+    guardar(clave);
+    // El clavo depende del tamaño del cartel: recalcular cuando la fuente termine de cargar
+    document.fonts && document.fonts.ready.then(() => dispatchEvent(new Event('resize')));
+  }
+  Object.entries(FUENTES).forEach(([clave, fu]) => {
+    const b = document.createElement('button');
+    b.dataset.clave = clave;
+    b.innerHTML = `<span class="muestra" style="font-family:${fu.cartel[0].replace(/"/g, "'")};font-weight:${fu.cartel[1]}">FERRETERA MONTES</span>
+      <small style="font-family:${fu.texto.replace(/"/g, "'")}">${fu.nombre} · Texto de ejemplo 123</small>`;
+    b.addEventListener('click', () => aplicarFuente(clave));
+    panelFuentes.appendChild(b);
+  });
+  toggleFuentes.addEventListener('click', () => {
+    const abierto = document.getElementById('fuentes').classList.toggle('abierto');
+    toggleFuentes.setAttribute('aria-expanded', abierto);
+  });
+  aplicarFuente(new URLSearchParams(location.search).get('fuente') || leer() || 'stencil');
+
+  // ---- Tarjetas que aparecen al entrar en pantalla ----
+  const io = new IntersectionObserver(ents => ents.forEach(en => {
+    if (en.isIntersecting) { en.target.classList.add('visible'); io.unobserve(en.target); }
+  }), { threshold: .15 });
+  document.querySelectorAll('.revelar').forEach((el, i) => {
+    el.style.transitionDelay = (i % 3) * 90 + 'ms';
+    io.observe(el);
+  });
+
+  const nav = document.getElementById('nav');
+  const escena = document.getElementById('inicio');
+  // Nav sólida apenas el martillo empieza a tirar (el fondo amarillo taparía el logo)
+  const navSolida = () => nav.classList.toggle('solida', scrollY > (escena.offsetHeight - innerHeight) * (reducir ? 1 : .4));
+  if (reducir) { addEventListener('scroll', navSolida, { passive: true }); return; }
+
+  // ---- Escena del martillo ----
+  const stage = document.getElementById('stage');
+  const panel = document.getElementById('panel');
+  const clavo = document.getElementById('clavo');
+  const martillo = document.getElementById('martillo');
+
+  const UNA = { x: 99, y: -304 };   // punto de la uña que engancha el clavo (coords del SVG)
+  const ANG_ENGANCHE = -35;          // inclinación del martillo cuando tiene el clavo
+  const rad = d => d * Math.PI / 180;
+  const clamp01 = v => Math.min(1, Math.max(0, v));
+  const tramo = (p, a, b) => clamp01((p - a) / (b - a));
+  const suave = t => t * t * (3 - 2 * t);
+  const mezclar = (A, B, t) => ({ x: A.x + (B.x - A.x) * t, y: A.y + (B.y - A.y) * t, a: A.a + (B.a - A.a) * t });
+
+  // Dónde tiene que estar la base del mango para que la uña caiga justo sobre el punto (cx, cy)
+  function agarre(cx, cy, ang, k) {
+    const c = Math.cos(rad(ang)), s = Math.sin(rad(ang));
+    return { x: cx - k * (UNA.x * c - UNA.y * s), y: cy - k * (UNA.x * s + UNA.y * c), a: ang };
+  }
+
+  let golpeado = false, pendiente = false;
+
+  function chispas(x, y) {
+    for (let i = 0; i < 14; i++) {
+      const ch = document.createElement('div');
+      ch.className = 'chispa';
+      ch.style.left = x + 'px'; ch.style.top = y + 'px';
+      const ang = Math.random() * Math.PI * 2, d = 25 + Math.random() * 55;
+      ch.style.setProperty('--dx', Math.cos(ang) * d + 'px');
+      ch.style.setProperty('--dy', Math.sin(ang) * d + 'px');
+      stage.appendChild(ch);
+      setTimeout(() => ch.remove(), 600);
+    }
+  }
+
+  function actualizar() {
+    pendiente = false;
+    const vw = stage.clientWidth, vh = stage.clientHeight;
+    const recorrido = escena.offsetHeight - vh;
+    const p = clamp01(scrollY / recorrido);
+    const k = Math.min(1, Math.max(.6, vw / 1000));  // escala del martillo
+
+    // Clavo en coordenadas de la escena (sin el desplazamiento del panel)
+    const cx = clavo.offsetLeft + clavo.offsetWidth / 2;
+    const cy = clavo.offsetTop + clavo.offsetHeight / 2;
+
+    // Fases: reposo → se levanta → golpe con la uña → tira del panel hacia abajo
+    const tirar = suave(tramo(p, .42, 1));
+    const bajada = tirar * (vh + 80);
+
+    const reposo    = { x: vw - 70 * k, y: vh + 120 * k, a: -22 };
+    const enganche  = agarre(cx, cy, ANG_ENGANCHE, k);
+    const levantado = { x: enganche.x + 80 * k, y: enganche.y + 40 * k, a: ANG_ENGANCHE + 48 };
+
+    let pose;
+    if (p < .05)      pose = reposo;
+    else if (p < .30) pose = mezclar(reposo, levantado, suave(tramo(p, .05, .30)));
+    else if (p < .36) { const t = tramo(p, .30, .36); pose = mezclar(levantado, enganche, t * t); }
+    else {
+      pose = agarre(cx, cy + bajada, ANG_ENGANCHE + tirar * 10, k);
+      // Si el ángulo cambia, la uña sigue sobre el clavo gracias a agarre()
+    }
+
+    martillo.classList.toggle('reposo', p < .05);
+    martillo.style.transform = `translate(${pose.x}px, ${pose.y}px) rotate(${pose.a}deg) scale(${k})`;
+    panel.style.transform = bajada ? `translateY(${bajada}px)` : '';
+
+    // Impacto: una sola vez al cruzar el golpe bajando
+    if (p >= .36 && !golpeado) {
+      golpeado = true;
+      chispas(cx, cy);
+      stage.classList.remove('temblor'); void stage.offsetWidth; stage.classList.add('temblor');
+    } else if (p < .33) golpeado = false;
+
+    navSolida();
+  }
+  const pedir = () => { if (!pendiente) { pendiente = true; requestAnimationFrame(actualizar); } };
+  stage.addEventListener('animationend', e => { if (e.target === stage) stage.classList.remove('temblor'); });
+  addEventListener('scroll', pedir, { passive: true });
+  addEventListener('resize', pedir);
+  actualizar();
+})();
+</script>
+</body>
+</html>
