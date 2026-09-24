@@ -53,3 +53,11 @@ Reglas para que no se rompa:
 - Si la lista queda vacía (`[]`), la sección de ofertas y su link del menú se ocultan solos.
 - Si el archivo tiene un error, la web no se rompe: muestra las ofertas de respaldo que están en `index.html`.
   Para chequear antes de guardar, podés pegar el contenido en [jsonlint.com](https://jsonlint.com).
+
+## Vista previa al compartir (WhatsApp, redes)
+
+`og-image.jpg` (1200×630) es la imagen que aparece al pegar el link en WhatsApp, Facebook, etc.
+Se genera a partir de `assets-fuente/og-image.html`: abrilo en Chrome con la ventana en 1200×630 y sacá una captura.
+
+WhatsApp guarda la vista previa en caché: si cambiás la imagen, puede tardar en actualizarse
+(para forzarlo, compartí el link con algo al final, por ejemplo `ferreteria-montes.vercel.app/?v=2`).
