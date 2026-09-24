@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ferretera Montes</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#1c1916">
 <meta name="description" content="Ferretera Montes, Blvd. Rondeau 762, Rosario. Tel 0341 323-3659. Herramientas, electricidad, plomería, pintura y bulonería.">
 <!-- Fuentes para probar con el selector. Cuando elijas una, dejá solo esas familias. -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -177,7 +180,9 @@
   .chat-cab b { display: block; font-size: .95rem; }
   .chat-cab small { font-size: .78rem; font-weight: 600; color: var(--gris-claro); }
   .chat-cab .estado::before { width: 7px; height: 7px; }
-  .chat-cerrar { margin-left: auto; background: none; border: 0; color: #fff; font-size: 1.6rem; line-height: 1; cursor: pointer; padding: 0 4px; }
+  .chat-reiniciar { margin-left: auto; background: none; border: 0; color: var(--gris-claro); font-size: 1.25rem; line-height: 1; cursor: pointer; padding: 0 4px; }
+  .chat-reiniciar:hover { color: var(--amarillo); }
+  .chat-cerrar { background: none; border: 0; color: #fff; font-size: 1.6rem; line-height: 1; cursor: pointer; padding: 0 4px; }
   .chat-mensajes { flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 8px; }
   .msg { max-width: 85%; padding: 9px 12px; border-radius: 12px; font-size: .93rem; line-height: 1.4; white-space: pre-line; }
   .msg.bot { background: #fff; border: 1px solid #ddd6c8; border-bottom-left-radius: 3px; align-self: flex-start; }
@@ -488,6 +493,7 @@
     <header class="chat-cab">
       <div class="diego-avatar chico" aria-hidden="true">D</div>
       <div><b>Diego · Ferretera Montes</b><small class="estado" data-estado></small></div>
+      <button class="chat-reiniciar" id="chatReiniciar" aria-label="Nueva consulta" title="Nueva consulta">↺</button>
       <button class="chat-cerrar" id="chatCerrar" aria-label="Cerrar">×</button>
     </header>
     <div class="chat-mensajes" id="chatMensajes" aria-live="polite"></div>
@@ -618,10 +624,17 @@
     if (/horario|abren|abris|abierto|cierran|cerras|hora/.test(t)) return OPCIONES['Horarios']();
     if (/donde|direcc|ubicac|llegar|queda/.test(t)) return OPCIONES['Dirección']();
     if (/envio|domicilio|delivery|mandan|llevan/.test(t)) return OPCIONES['Envíos']();
-    if (/^(hola|buenas|buen dia|buenas tardes|buenas noches)\b/.test(t) && t.length < 25)
+    if (/^(hola|buenas|buen dia|buenos dias|buenas tardes|buenas noches)[\s!.,]*$/.test(t))
       return responder('¡Hola! ¿En qué te puedo ayudar? Elegí una opción o escribí tu consulta.');
     responder('Eso consultalo con Diego, el dueño, que es quien atiende la ferretería. Te paso con él por WhatsApp con tu consulta ya escrita.',
       `Hola Diego, te escribo desde la web: ${texto}`);
+  }
+  // La conversación no se guarda: vive solo mientras la página está abierta.
+  function reiniciarChat() {
+    chat.msgs.innerHTML = '';
+    esperandoProducto = false;
+    iniciado = false;
+    abrirChat(true);
   }
   function abrirChat(abrir) {
     chat.panel.hidden = !abrir;
@@ -635,6 +648,7 @@
   }
   chat.abrir.addEventListener('click', () => abrirChat(chat.panel.hidden));
   document.getElementById('chatCerrar').addEventListener('click', () => abrirChat(false));
+  document.getElementById('chatReiniciar').addEventListener('click', reiniciarChat);
   chat.form.addEventListener('submit', e => {
     e.preventDefault();
     const texto = chat.input.value.trim();

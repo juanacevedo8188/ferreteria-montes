@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- La M del cartel: cuadrado amarillo inclinado con la letra en marrón oscuro -->
+  <g transform="rotate(10 32 32)">
+    <rect x="8" y="8" width="48" height="48" rx="3" fill="#f5b700" stroke="#1c1916" stroke-width="3"/>
+    <path d="M17 47V17h9l6 12 6-12h9v30h-8V32l-5 10h-4l-5-10v15z" fill="#4a413b"/>
+  </g>
+</svg>
