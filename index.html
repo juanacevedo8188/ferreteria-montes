@@ -177,6 +177,27 @@
   .botones { display: flex; flex-wrap: wrap; gap: 12px; }
   @media (max-width: 800px) { .nosotros-grid { grid-template-columns: 1fr; gap: 36px; } }
 
+  /* ---------- RESEÑA EN GOOGLE ---------- */
+  .resena {
+    background: radial-gradient(circle, rgba(0,0,0,.14) 2px, transparent 2.5px) 0 0 / 28px 28px, var(--amarillo);
+    text-align: center;
+  }
+  .resena .etiqueta { color: var(--negro); }
+  .resena-caja { max-width: 640px; }
+  .resena h2 { margin-bottom: 14px; }
+  .resena p { font-size: 1.1rem; margin: 0 auto 26px; max-width: 52ch; }
+  .estrellas { display: inline-flex; gap: 6px; margin-bottom: 12px; }
+  .estrellas a { display: block; color: var(--negro); transition: transform .15s; }
+  .estrellas svg { width: 48px; height: 48px; fill: rgba(28,25,22,.12); stroke: var(--negro); stroke-width: 1.6; stroke-linejoin: round; transition: fill .15s; }
+  /* Al pasar el mouse se "llenan" las estrellas hasta la señalada */
+  .estrellas:hover svg { fill: var(--negro); }
+  .estrellas a:hover ~ a svg { fill: rgba(28,25,22,.12); }
+  .estrellas a:hover { transform: scale(1.12) rotate(-6deg); }
+  .resena-rating { font-size: .95rem; margin-bottom: 26px; }
+  .btn.btn-oscuro { background: var(--negro); color: #fff; box-shadow: 4px 4px 0 #000; }
+  .btn.btn-oscuro:hover { box-shadow: 2px 2px 0 #000; }
+  @media (max-width: 600px) { .estrellas svg { width: 42px; height: 42px; } }
+
   /* ---------- CHAT ---------- */
   .chat { position: fixed; right: 16px; bottom: 16px; z-index: 95; font-family: var(--f-texto); }
   .chat-abrir {
@@ -491,6 +512,24 @@
       <div class="card revelar"><span class="tag">3x2</span><h3>Cinta aisladora 20 m</h3><div class="antes">$ 3.600 c/u</div><div class="precio">$ 7.200</div></div>
       <div class="card revelar"><span class="tag">-15%</span><h3>Látex interior 20 L</h3><div class="antes">$ 120.000</div><div class="precio">$ 102.000</div></div>
     </div>
+  </div>
+</section>
+
+<section class="bloque resena" id="resena">
+  <div class="contenedor resena-caja revelar">
+    <div class="etiqueta">Tu opinión nos ayuda</div>
+    <h2>¿Te atendimos bien?</h2>
+    <p>Dejanos tu reseña en Google: te lleva menos de un minuto y a una ferretería de barrio le ayuda muchísimo a que la encuentren.</p>
+    <!-- Todas las estrellas llevan a la misma página de Google (no se filtran reseñas según la puntuación) -->
+    <div class="estrellas" role="group" aria-label="Calificar en Google">
+        <a href="https://search.google.com/local/writereview?placeid=ChIJjxgpDG9TtpUR6t3GSvXgrQA" target="_blank" rel="noopener" aria-label="1 de 5 estrellas"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.6l2.9 6 6.5.8-4.8 4.5 1.2 6.5L12 17.3l-5.8 3.1 1.2-6.5-4.8-4.5 6.5-.8z"/></svg></a>
+        <a href="https://search.google.com/local/writereview?placeid=ChIJjxgpDG9TtpUR6t3GSvXgrQA" target="_blank" rel="noopener" aria-label="2 de 5 estrellas"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.6l2.9 6 6.5.8-4.8 4.5 1.2 6.5L12 17.3l-5.8 3.1 1.2-6.5-4.8-4.5 6.5-.8z"/></svg></a>
+        <a href="https://search.google.com/local/writereview?placeid=ChIJjxgpDG9TtpUR6t3GSvXgrQA" target="_blank" rel="noopener" aria-label="3 de 5 estrellas"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.6l2.9 6 6.5.8-4.8 4.5 1.2 6.5L12 17.3l-5.8 3.1 1.2-6.5-4.8-4.5 6.5-.8z"/></svg></a>
+        <a href="https://search.google.com/local/writereview?placeid=ChIJjxgpDG9TtpUR6t3GSvXgrQA" target="_blank" rel="noopener" aria-label="4 de 5 estrellas"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.6l2.9 6 6.5.8-4.8 4.5 1.2 6.5L12 17.3l-5.8 3.1 1.2-6.5-4.8-4.5 6.5-.8z"/></svg></a>
+        <a href="https://search.google.com/local/writereview?placeid=ChIJjxgpDG9TtpUR6t3GSvXgrQA" target="_blank" rel="noopener" aria-label="5 de 5 estrellas"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.6l2.9 6 6.5.8-4.8 4.5 1.2 6.5L12 17.3l-5.8 3.1 1.2-6.5-4.8-4.5 6.5-.8z"/></svg></a>
+    </div>
+    <div class="resena-rating"><b>4.8 ★</b> · 58 reseñas en Google</div>
+    <a class="btn btn-oscuro" href="https://search.google.com/local/writereview?placeid=ChIJjxgpDG9TtpUR6t3GSvXgrQA" target="_blank" rel="noopener">Escribir mi reseña en Google ↗</a>
   </div>
 </section>
 
