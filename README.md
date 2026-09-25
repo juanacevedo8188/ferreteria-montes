@@ -61,3 +61,17 @@ Se genera a partir de `assets-fuente/og-image.html`: abrilo en Chrome con la ven
 
 WhatsApp guarda la vista previa en caché: si cambiás la imagen, puede tardar en actualizarse
 (para forzarlo, compartí el link con algo al final, por ejemplo `ferreteria-montes.vercel.app/?v=2`).
+
+## Cartel QR para reseñas (imprimible)
+
+En `imprimibles/`:
+
+- `qr-resena.pdf`: hoja A4 apaisada con **dos carteles A5** para imprimir y cortar por la línea punteada.
+  Imprimir **al 100 %** (sin "ajustar a página") y en color.
+- `qr-resena.png`: un solo cartel, para mandar por WhatsApp o imprimir suelto.
+- `qr-resena.svg`: el QR solo, en vector (sirve para stickers, bolsas o tarjetas).
+- `qr-resena.html`: el diseño editable; también se puede abrir en el navegador y
+  imprimir desde ahí: `ferreteria-montes.vercel.app/imprimibles/qr-resena.html`.
+
+El QR lleva a `https://search.google.com/local/writereview?placeid=ChIJjxgpDG9TtpUR6t3GSvXgrQA`
+(la ventana de "Escribir una reseña" de Google para Ferretera Montes).
