@@ -7,13 +7,13 @@
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="theme-color" content="#1c1916">
-<meta name="description" content="Ferretería familiar en Blvd. Rondeau 762, Rosario. Herramientas, bulonería, electricidad, plomería y pintura. Consultá con Diego por WhatsApp.">
+<meta name="description" content="Ferretera Montes · Blvd. Rondeau 762, Rosario. Herramientas, bulonería, electricidad, plomería y pintura. Asesoramiento técnico y entregas a domicilio.">
 <!-- Vista previa al compartir el link (WhatsApp, Facebook, Instagram, X). La imagen tiene que ir con URL completa. -->
 <meta property="og:type" content="website">
 <meta property="og:locale" content="es_AR">
 <meta property="og:site_name" content="Ferretera Montes">
 <meta property="og:title" content="Ferretera Montes · Todo para tu obra">
-<meta property="og:description" content="Ferretería familiar en Blvd. Rondeau 762, Rosario. Herramientas, bulonería, electricidad, plomería y pintura. Consultá con Diego por WhatsApp.">
+<meta property="og:description" content="Ferretera Montes · Blvd. Rondeau 762, Rosario. Herramientas, bulonería, electricidad, plomería y pintura. Asesoramiento técnico y entregas a domicilio.">
 <meta property="og:url" content="https://ferreteria-montes.vercel.app/">
 <meta property="og:image" content="https://ferreteria-montes.vercel.app/og-image.jpg">
 <meta property="og:image:width" content="1200">
@@ -156,21 +156,23 @@
   .valores { list-style: none; display: grid; gap: 12px; margin-top: 22px; }
   .valores li { padding-left: 18px; border-left: 4px solid var(--amarillo); color: #555; }
   .valores b { display: block; color: var(--negro); }
-  .diego {
-    background: var(--negro); color: #fff; border-radius: 8px; padding: 30px 26px; text-align: center;
-    box-shadow: 8px 8px 0 var(--amarillo);
+  .frente { margin: 0; }
+  .frente img {
+    display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover;
+    border: 3px solid var(--negro); border-radius: 8px; box-shadow: 10px 10px 0 var(--amarillo);
   }
-  .diego-avatar {
-    width: 84px; height: 84px; margin: 0 auto 14px; display: grid; place-items: center;
-    background: var(--amarillo); color: var(--chapa); border-radius: 6px; transform: rotate(8deg);
-    font: var(--w-cartel) 2.8rem/1 var(--f-cartel); box-shadow: 2px 3px 0 #000;
+  .frente figcaption {
+    display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 14px;
+    margin: 20px 0 16px; font-size: .95rem; color: #444;
   }
-  .diego-avatar.chico { width: 38px; height: 38px; margin: 0; font-size: 1.3rem; transform: rotate(8deg); flex: none; }
-  .diego-nombre { font: var(--w-titulo) 1.8rem/1.1 var(--f-titulo); }
-  .diego-rol { color: var(--amarillo); font-size: .9rem; margin-bottom: 16px; }
-  .diego-cita { color: var(--gris-claro); font-style: italic; margin-bottom: 16px; }
-  .diego-rating { font-size: .9rem; color: var(--gris-claro); margin-bottom: 20px; }
-  .diego-rating b { color: var(--amarillo); }
+  .frente figcaption b { color: var(--negro); }
+  .frente-rating b { color: var(--negro); }
+  /* Avatar del chat: la M del cartel */
+  .avatar-m {
+    width: 38px; height: 38px; flex: none; display: grid; place-items: center;
+    background: var(--amarillo); color: var(--chapa); border-radius: 5px; transform: rotate(8deg);
+    font: var(--w-cartel) 1.3rem/1 var(--f-cartel); box-shadow: 2px 3px 0 #000;
+  }
   .btn.btn-wa { display: inline-flex; align-items: center; gap: 8px; background: #25d366; color: #0b2e17; box-shadow: 4px 4px 0 #128c4a; }
   .btn.btn-wa:hover { box-shadow: 2px 2px 0 #128c4a; }
   .btn-wa svg { width: 20px; height: 20px; }
@@ -394,8 +396,8 @@
 
     <div class="detras">
       <div>
-        <div class="etiqueta" id="detrasEtiqueta">Ya estás adentro</div>
-        <h2 id="detrasTitulo">Pasá, está abierto</h2>
+        <div class="etiqueta" id="detrasEtiqueta">Bienvenido</div>
+        <h2 id="detrasTitulo">Estamos abiertos</h2>
         <div class="stats">
           <div><b>4.8 ★</b>58 reseñas en Google</div>
           <div><b>Envíos</b>entrega a domicilio</div>
@@ -436,7 +438,7 @@
         <div class="lema">Todo para tu <span class="amarillo">obra</span></div>
         <p>Herramientas, bulonería, electricidad, plomería y pintura. Si no lo tenemos, te lo conseguimos.</p>
         <div class="hero-ctas">
-          <a class="btn btn-wa" href="#" data-wa="Hola Diego, te escribo desde la web."><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20zm4.4-6c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.5.1l-.8.9c-.1.2-.3.2-.5.1a6.6 6.6 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.5-.4h-.5a.9.9 0 0 0-.6.3 2.7 2.7 0 0 0-.8 2c0 1.2.9 2.3 1 2.5.1.2 1.7 2.6 4.2 3.7 1.6.7 2.2.7 3 .6.5-.1 1.4-.6 1.6-1.1.2-.6.2-1 .1-1.1l-.4-.2z"/></svg> Escribile a Diego</a>
+          <a class="btn btn-wa" href="#" data-wa="Hola, quería hacer una consulta."><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20zm4.4-6c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.5.1l-.8.9c-.1.2-.3.2-.5.1a6.6 6.6 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.5-.4h-.5a.9.9 0 0 0-.6.3 2.7 2.7 0 0 0-.8 2c0 1.2.9 2.3 1 2.5.1.2 1.7 2.6 4.2 3.7 1.6.7 2.2.7 3 .6.5-.1 1.4-.6 1.6-1.1.2-.6.2-1 .1-1.1l-.4-.2z"/></svg> Escribinos por WhatsApp</a>
           <a class="btn btn-borde" href="https://www.google.com/maps/search/?api=1&amp;query=Ferretera+Montes+Blvd.+Rondeau+762+Rosario" target="_blank" rel="noopener">Cómo llegar</a>
         </div>
       </div>
@@ -472,8 +474,8 @@
     <div class="etiqueta">Además</div>
     <h2>Servicios</h2>
     <div class="grilla dos">
-      <div class="card revelar"><div class="icono"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.7a1 1 0 0 0-.2-.6l-3.5-4.3A1 1 0 0 0 17.5 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg></div><h3>Entrega a domicilio</h3><p>Te llevamos el pedido. Consultá por teléfono.</p></div>
-      <div class="card revelar"><div class="icono"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22z"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 2.5-3 4"/><path d="M12 17h.01"/></svg></div><h3>Asesoramiento</h3><p>Traé la pieza o una foto y te decimos qué va.</p></div>
+      <div class="card revelar"><div class="icono"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.7a1 1 0 0 0-.2-.6l-3.5-4.3A1 1 0 0 0 17.5 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg></div><h3>Entrega a domicilio</h3><p>Coordinamos el envío de tu pedido por WhatsApp o teléfono.</p></div>
+      <div class="card revelar"><div class="icono"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22z"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 2.5-3 4"/><path d="M12 17h.01"/></svg></div><h3>Asesoramiento</h3><p>Traé la pieza o una foto y te indicamos el repuesto correcto.</p></div>
     </div>
   </div>
 </section>
@@ -481,24 +483,25 @@
 <section class="bloque nosotros" id="nosotros">
   <div class="contenedor nosotros-grid">
     <div class="revelar">
-      <div class="etiqueta">Ferretería familiar</div>
-      <h2>Atendida por sus dueños</h2>
-      <p class="nosotros-lead">En Ferretera Montes te atiende Diego, el dueño, junto a su familia. Sin vueltas: nos contás qué estás arreglando y te ayudamos a encontrar la pieza justa, aunque sea un solo tornillo.</p>
-      <p>Somos una ferretería de barrio en Blvd. Rondeau. Muchos de nuestros clientes vuelven porque saben que acá los asesoramos de verdad, y si no tenemos lo que buscan, se lo conseguimos.</p>
+      <div class="etiqueta">Sobre nosotros</div>
+      <h2>Soluciones para cada obra</h2>
+      <p class="nosotros-lead">En Ferretera Montes trabajamos para que encuentres lo que tu proyecto necesita, con atención personalizada y asesoramiento técnico en cada consulta.</p>
+      <p>Ofrecemos herramientas, bulonería, electricidad, plomería y pintura para todo tipo de trabajos, desde una reparación en casa hasta una obra. Si un producto no está en stock, lo gestionamos por vos.</p>
       <ul class="valores">
-        <li><b>Atención personalizada</b>Te atiende el dueño, no un call center.</li>
-        <li><b>Asesoramiento</b>Traé la pieza o una foto y vemos qué va.</li>
-        <li><b>Entrega a domicilio</b>Coordinamos el envío por WhatsApp.</li>
+        <li><b>Asesoramiento técnico</b>Te ayudamos a elegir el producto correcto para cada trabajo.</li>
+        <li><b>Atención personalizada</b>Respondemos tus consultas en el local o por WhatsApp.</li>
+        <li><b>Entrega a domicilio</b>Coordinamos el envío de tu pedido.</li>
       </ul>
     </div>
-    <aside class="diego revelar">
-      <div class="diego-avatar" aria-hidden="true">D</div>
-      <div class="diego-nombre">Diego</div>
-      <div class="diego-rol">Dueño · te atiende en el mostrador</div>
-      <div class="diego-cita">“Si no sabés cómo se llama la pieza, no importa: mandame una foto y lo resolvemos.”</div>
-      <div class="diego-rating"><b>4.8 ★</b> 58 reseñas en Google</div>
-      <a class="btn btn-wa" href="#" data-wa="Hola Diego, te escribo desde la web."><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20zm4.4-6c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.5.1l-.8.9c-.1.2-.3.2-.5.1a6.6 6.6 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.5-.4h-.5a.9.9 0 0 0-.6.3 2.7 2.7 0 0 0-.8 2c0 1.2.9 2.3 1 2.5.1.2 1.7 2.6 4.2 3.7 1.6.7 2.2.7 3 .6.5-.1 1.4-.6 1.6-1.1.2-.6.2-1 .1-1.1l-.4-.2z"/></svg> Consultale a Diego</a>
-    </aside>
+    <figure class="frente revelar">
+      <img src="frente-1200.jpg" srcset="frente-700.jpg 700w, frente-1200.jpg 1200w" sizes="(max-width: 800px) 92vw, 460px"
+           width="1200" height="900" loading="lazy" alt="Frente de Ferretera Montes en Blvd. Rondeau 762, Rosario">
+      <figcaption>
+        <span><b>Blvd. Rondeau 762</b> · Rosario</span>
+        <span class="frente-rating"><b>4.8 ★</b> 58 reseñas en Google</span>
+      </figcaption>
+      <a class="btn btn-wa" href="#" data-wa="Hola, quería hacer una consulta."><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20zm4.4-6c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.5.1l-.8.9c-.1.2-.3.2-.5.1a6.6 6.6 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.5-.4h-.5a.9.9 0 0 0-.6.3 2.7 2.7 0 0 0-.8 2c0 1.2.9 2.3 1 2.5.1.2 1.7 2.6 4.2 3.7 1.6.7 2.2.7 3 .6.5-.1 1.4-.6 1.6-1.1.2-.6.2-1 .1-1.1l-.4-.2z"/></svg> Escribinos por WhatsApp</a>
+    </figure>
   </div>
 </section>
 
@@ -519,7 +522,7 @@
   <div class="contenedor resena-caja revelar">
     <div class="etiqueta">Tu opinión nos ayuda</div>
     <h2>¿Te atendimos bien?</h2>
-    <p>Dejanos tu reseña en Google: te lleva menos de un minuto y a una ferretería de barrio le ayuda muchísimo a que la encuentren.</p>
+    <p>Tu reseña en Google nos ayuda a seguir mejorando y a que más clientes nos encuentren. Te lleva menos de un minuto.</p>
     <!-- Todas las estrellas llevan a la misma página de Google (no se filtran reseñas según la puntuación) -->
     <div class="estrellas" role="group" aria-label="Calificar en Google">
         <a href="https://search.google.com/local/writereview?placeid=ChIJjxgpDG9TtpUR6t3GSvXgrQA" target="_blank" rel="noopener" aria-label="1 de 5 estrellas"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.6l2.9 6 6.5.8-4.8 4.5 1.2 6.5L12 17.3l-5.8 3.1 1.2-6.5-4.8-4.5 6.5-.8z"/></svg></a>
@@ -539,7 +542,7 @@
       <div class="etiqueta">Vení, llamanos o escribinos</div>
       <h2>Contacto</h2>
       <div class="botones">
-        <a class="btn btn-wa" href="#" data-wa="Hola Diego, te escribo desde la web."><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20zm4.4-6c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.5.1l-.8.9c-.1.2-.3.2-.5.1a6.6 6.6 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.5-.4h-.5a.9.9 0 0 0-.6.3 2.7 2.7 0 0 0-.8 2c0 1.2.9 2.3 1 2.5.1.2 1.7 2.6 4.2 3.7 1.6.7 2.2.7 3 .6.5-.1 1.4-.6 1.6-1.1.2-.6.2-1 .1-1.1l-.4-.2z"/></svg> WhatsApp</a>
+        <a class="btn btn-wa" href="#" data-wa="Hola, quería hacer una consulta."><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20zm4.4-6c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.5.1l-.8.9c-.1.2-.3.2-.5.1a6.6 6.6 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.5-.4h-.5a.9.9 0 0 0-.6.3 2.7 2.7 0 0 0-.8 2c0 1.2.9 2.3 1 2.5.1.2 1.7 2.6 4.2 3.7 1.6.7 2.2.7 3 .6.5-.1 1.4-.6 1.6-1.1.2-.6.2-1 .1-1.1l-.4-.2z"/></svg> WhatsApp</a>
         <a class="btn" href="tel:+543413233659">Llamar: 0341 323-3659</a>
       </div>
     </div>
@@ -563,12 +566,12 @@
   </div>
 </section>
 
-<!-- Asistente: responde lo básico y deriva a Diego por WhatsApp. No usa IA ni servicios externos. -->
+<!-- Asistente: responde lo básico y deriva las consultas a WhatsApp. No usa IA ni servicios externos. -->
 <div class="chat" id="chat">
-  <section class="chat-panel" id="chatPanel" role="dialog" aria-label="Consultas con Ferretera Montes" hidden>
+  <section class="chat-panel" id="chatPanel" role="dialog" aria-label="Consultas a Ferretera Montes" hidden>
     <header class="chat-cab">
-      <div class="diego-avatar chico" aria-hidden="true">D</div>
-      <div><b>Diego · Ferretera Montes</b><small class="estado" data-estado></small></div>
+      <div class="avatar-m" aria-hidden="true">M</div>
+      <div><b>Ferretera Montes</b><small class="estado" data-estado></small></div>
       <button class="chat-reiniciar" id="chatReiniciar" aria-label="Nueva consulta" title="Nueva consulta">↺</button>
       <button class="chat-cerrar" id="chatCerrar" aria-label="Cerrar">×</button>
     </header>
@@ -579,7 +582,7 @@
       <button type="submit" aria-label="Enviar">➤</button>
     </form>
   </section>
-  <button class="chat-abrir" id="chatAbrir" aria-expanded="false" aria-controls="chatPanel"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20zm4.4-6c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.5.1l-.8.9c-.1.2-.3.2-.5.1a6.6 6.6 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.5-.4h-.5a.9.9 0 0 0-.6.3 2.7 2.7 0 0 0-.8 2c0 1.2.9 2.3 1 2.5.1.2 1.7 2.6 4.2 3.7 1.6.7 2.2.7 3 .6.5-.1 1.4-.6 1.6-1.1.2-.6.2-1 .1-1.1l-.4-.2z"/></svg><span>Consultá con Diego</span></button>
+  <button class="chat-abrir" id="chatAbrir" aria-expanded="false" aria-controls="chatPanel"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20zm4.4-6c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.5.1l-.8.9c-.1.2-.3.2-.5.1a6.6 6.6 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.5-.4h-.5a.9.9 0 0 0-.6.3 2.7 2.7 0 0 0-.8 2c0 1.2.9 2.3 1 2.5.1.2 1.7 2.6 4.2 3.7 1.6.7 2.2.7 3 .6.5-.1 1.4-.6 1.6-1.1.2-.6.2-1 .1-1.1l-.4-.2z"/></svg><span>Consultanos</span></button>
 </div>
 
 <footer>© <span id="anio"></span> Ferretera Montes · Rosario</footer>
@@ -629,8 +632,8 @@
     }
     document.querySelectorAll('[data-estado]').forEach(el => { el.textContent = texto; el.classList.toggle('abierto', !!turno); });
     // Pantalla amarilla detrás del hero
-    document.getElementById('detrasTitulo').textContent = turno ? 'Pasá, está abierto' : 'Ahora está cerrado';
-    document.getElementById('detrasEtiqueta').textContent = turno ? 'Ya estás adentro' : `Volvé pronto · ${abre}`;
+    document.getElementById('detrasTitulo').textContent = turno ? 'Estamos abiertos' : 'Ahora estamos cerrados';
+    document.getElementById('detrasEtiqueta').textContent = turno ? 'Bienvenido' : `Te esperamos · ${abre}`;
     document.querySelectorAll('#horario li').forEach(li => li.classList.toggle('hoy', li.dataset.dias.split(',').includes(String(dia))));
   }
   estadoLocal();
@@ -643,7 +646,7 @@
   document.querySelectorAll('[data-wa]').forEach(a => { a.href = wa(a.dataset.wa); a.target = '_blank'; a.rel = 'noopener'; });
   const WA_ICONO = document.querySelector('.btn-wa svg').outerHTML;
 
-  // ---- Asistente: respuestas simples y derivación a Diego ----
+  // ---- Asistente: respuestas simples y derivación a WhatsApp ----
   const chat = {
     panel: document.getElementById('chatPanel'), abrir: document.getElementById('chatAbrir'),
     msgs: document.getElementById('chatMensajes'), opciones: document.getElementById('chatOpciones'),
@@ -658,7 +661,7 @@
     if (linkWa) {
       const a = document.createElement('a');
       a.className = 'btn btn-wa'; a.href = wa(linkWa); a.target = '_blank'; a.rel = 'noopener';
-      a.innerHTML = WA_ICONO + ' Escribirle a Diego';
+      a.innerHTML = WA_ICONO + ' Escribir por WhatsApp';
       m.appendChild(document.createElement('br')); m.appendChild(a);
     }
     chat.msgs.appendChild(m);
@@ -671,11 +674,11 @@
     setTimeout(() => { t.remove(); agregar(texto, 'bot', linkWa); }, 550);
   }
   const OPCIONES = {
-    'Busco un producto': () => { esperandoProducto = true; responder('Contame qué necesitás (por ejemplo: "tarugos del 8" o "llave térmica 20A") y se lo paso a Diego.'); },
+    'Busco un producto': () => { esperandoProducto = true; responder('Contanos qué necesitás (por ejemplo: "tarugos del 8" o "llave térmica 20A") y te confirmamos disponibilidad y precio.'); },
     'Horarios': () => responder(`Lunes a viernes: 8:30 a 13 y 16:30 a 18:30\nSábado: 9 a 13\nDomingo: cerrado\n\nAhora: ${document.querySelector('[data-estado]').textContent}.`),
     'Dirección': () => responder('Estamos en Blvd. Rondeau 762, Rosario.\nEn la sección Contacto tenés el mapa y el botón "Cómo llegar".'),
-    'Envíos': () => responder('Sí, hacemos entrega a domicilio. La zona y el costo los coordina Diego: consultá con él.', 'Hola Diego, quería consultar por un envío a domicilio.'),
-    'Hablar con Diego': () => responder('Diego es el dueño y el que atiende la ferretería. Escribile directo por WhatsApp.', 'Hola Diego, te escribo desde la web.'),
+    'Envíos': () => responder('Sí, realizamos entregas a domicilio. Consultanos zona y costo por WhatsApp.', 'Hola, quería consultar por un envío a domicilio.'),
+    'Hablar con un asesor': () => responder('Te comunicamos con nuestro equipo por WhatsApp.', 'Hola, quería hacer una consulta.'),
   };
   function mostrarOpciones() {
     chat.opciones.innerHTML = '';
@@ -689,15 +692,17 @@
     const t = texto.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
     if (esperandoProducto) {
       esperandoProducto = false;
-      return responder(`Consultá con Diego: él te confirma si hay "${texto}" y el precio.`, `Hola Diego, ¿tenés ${texto}?`);
+      return responder(`Te confirmamos disponibilidad y precio de "${texto}" por WhatsApp.`, `Hola, quería consultar si tienen: ${texto}.`);
     }
     if (/horario|abren|abris|abierto|cierran|cerras|hora/.test(t)) return OPCIONES['Horarios']();
+    if (/\b(tienen|tenes|hay|venden|precio|cuesta|sale|stock)\b/.test(t))
+      return responder('Te confirmamos disponibilidad y precio por WhatsApp, con tu consulta ya escrita.', `Hola, quería consultar: ${texto}`);
     if (/donde|direcc|ubicac|llegar|queda/.test(t)) return OPCIONES['Dirección']();
     if (/envio|domicilio|delivery|mandan|llevan/.test(t)) return OPCIONES['Envíos']();
     if (/^(hola|buenas|buen dia|buenos dias|buenas tardes|buenas noches)[\s!.,]*$/.test(t))
       return responder('¡Hola! ¿En qué te puedo ayudar? Elegí una opción o escribí tu consulta.');
-    responder('Eso consultalo con Diego, el dueño, que es quien atiende la ferretería. Te paso con él por WhatsApp con tu consulta ya escrita.',
-      `Hola Diego, te escribo desde la web: ${texto}`);
+    responder('Para esa consulta te comunicamos con nuestro equipo por WhatsApp, con tu mensaje ya escrito.',
+      `Hola, quería hacer una consulta: ${texto}`);
   }
   // La conversación no se guarda: vive solo mientras la página está abierta.
   function reiniciarChat() {
@@ -727,7 +732,7 @@
     ajustarChat();
     if (abrir && !iniciado) {
       iniciado = true;
-      agregar('¡Hola! Soy el asistente de Ferretera Montes. Te ayudo con lo básico, y para todo lo demás te paso con Diego, el dueño, que es quien atiende la ferretería.', 'bot');
+      agregar('¡Hola! Soy el asistente virtual de Ferretera Montes. Puedo ayudarte con horarios, dirección y envíos; para productos, precios o stock te comunicamos con nuestro equipo por WhatsApp.', 'bot');
       mostrarOpciones();
     }
     // Solo con mouse se pone el cursor en el campo: en celular abriría el teclado de golpe
