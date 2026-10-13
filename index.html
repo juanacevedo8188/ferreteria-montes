@@ -7,13 +7,13 @@
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="theme-color" content="#1c1916">
-<meta name="description" content="Ferretera Montes · Blvd. Rondeau 762, Rosario. Herramientas, bulonería, electricidad, plomería y pintura. Asesoramiento técnico y entregas a domicilio.">
+<meta name="description" content="Ferretera Montes · Blvd. Rondeau 762, Rosario. Herramientas, bulonería, electricidad, plomería y pintura. Asesoramiento técnico y atención personalizada.">
 <!-- Vista previa al compartir el link (WhatsApp, Facebook, Instagram, X). La imagen tiene que ir con URL completa. -->
 <meta property="og:type" content="website">
 <meta property="og:locale" content="es_AR">
 <meta property="og:site_name" content="Ferretera Montes">
 <meta property="og:title" content="Ferretera Montes · Todo para tu obra">
-<meta property="og:description" content="Ferretera Montes · Blvd. Rondeau 762, Rosario. Herramientas, bulonería, electricidad, plomería y pintura. Asesoramiento técnico y entregas a domicilio.">
+<meta property="og:description" content="Ferretera Montes · Blvd. Rondeau 762, Rosario. Herramientas, bulonería, electricidad, plomería y pintura. Asesoramiento técnico y atención personalizada.">
 <meta property="og:url" content="https://ferreteria-montes.vercel.app/">
 <meta property="og:image" content="https://ferreteria-montes.vercel.app/og-image.jpg">
 <meta property="og:image:width" content="1200">
@@ -400,7 +400,7 @@
         <h2 id="detrasTitulo">Estamos abiertos</h2>
         <div class="stats">
           <div><b>4.8 ★</b>58 reseñas en Google</div>
-          <div><b>Envíos</b>entrega a domicilio</div>
+          <div><b>Asesoramiento</b>técnico en cada consulta</div>
           <div><b>Rondeau 762</b>Rosario, Santa Fe</div>
         </div>
         <a href="#rubros" class="btn">Ver rubros ↓</a>
@@ -474,7 +474,7 @@
     <div class="etiqueta">Además</div>
     <h2>Servicios</h2>
     <div class="grilla dos">
-      <div class="card revelar"><div class="icono"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.7a1 1 0 0 0-.2-.6l-3.5-4.3A1 1 0 0 0 17.5 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg></div><h3>Entrega a domicilio</h3><p>Coordinamos el envío de tu pedido por WhatsApp o teléfono.</p></div>
+      <div class="card revelar"><div class="icono"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 9h8M8 13h5"/></svg></div><h3>Consultas por WhatsApp</h3><p>Consultá stock y precios antes de venir al local.</p></div>
       <div class="card revelar"><div class="icono"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22z"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 2.5-3 4"/><path d="M12 17h.01"/></svg></div><h3>Asesoramiento</h3><p>Traé la pieza o una foto y te indicamos el repuesto correcto.</p></div>
     </div>
   </div>
@@ -490,7 +490,7 @@
       <ul class="valores">
         <li><b>Asesoramiento técnico</b>Te ayudamos a elegir el producto correcto para cada trabajo.</li>
         <li><b>Atención personalizada</b>Respondemos tus consultas en el local o por WhatsApp.</li>
-        <li><b>Entrega a domicilio</b>Coordinamos el envío de tu pedido.</li>
+        <li><b>Todo en un lugar</b>Herramientas, bulonería, electricidad, plomería y pintura.</li>
       </ul>
     </div>
     <figure class="frente revelar">
@@ -677,7 +677,6 @@
     'Busco un producto': () => { esperandoProducto = true; responder('Contanos qué necesitás (por ejemplo: "tarugos del 8" o "llave térmica 20A") y te confirmamos disponibilidad y precio.'); },
     'Horarios': () => responder(`Lunes a viernes: 8:30 a 13 y 16:30 a 18:30\nSábado: 9 a 13\nDomingo: cerrado\n\nAhora: ${document.querySelector('[data-estado]').textContent}.`),
     'Dirección': () => responder('Estamos en Blvd. Rondeau 762, Rosario.\nEn la sección Contacto tenés el mapa y el botón "Cómo llegar".'),
-    'Envíos': () => responder('Sí, realizamos entregas a domicilio. Consultanos zona y costo por WhatsApp.', 'Hola, quería consultar por un envío a domicilio.'),
     'Hablar con un asesor': () => responder('Te comunicamos con nuestro equipo por WhatsApp.', 'Hola, quería hacer una consulta.'),
   };
   function mostrarOpciones() {
@@ -698,7 +697,6 @@
     if (/\b(tienen|tenes|hay|venden|precio|cuesta|sale|stock)\b/.test(t))
       return responder('Te confirmamos disponibilidad y precio por WhatsApp, con tu consulta ya escrita.', `Hola, quería consultar: ${texto}`);
     if (/donde|direcc|ubicac|llegar|queda/.test(t)) return OPCIONES['Dirección']();
-    if (/envio|domicilio|delivery|mandan|llevan/.test(t)) return OPCIONES['Envíos']();
     if (/^(hola|buenas|buen dia|buenos dias|buenas tardes|buenas noches)[\s!.,]*$/.test(t))
       return responder('¡Hola! ¿En qué te puedo ayudar? Elegí una opción o escribí tu consulta.');
     responder('Para esa consulta te comunicamos con nuestro equipo por WhatsApp, con tu mensaje ya escrito.',
@@ -732,7 +730,7 @@
     ajustarChat();
     if (abrir && !iniciado) {
       iniciado = true;
-      agregar('¡Hola! Soy el asistente virtual de Ferretera Montes. Puedo ayudarte con horarios, dirección y envíos; para productos, precios o stock te comunicamos con nuestro equipo por WhatsApp.', 'bot');
+      agregar('¡Hola! Soy el asistente virtual de Ferretera Montes. Puedo ayudarte con horarios y dirección; para productos, precios o stock te comunicamos con nuestro equipo por WhatsApp.', 'bot');
       mostrarOpciones();
     }
     // Solo con mouse se pone el cursor en el campo: en celular abriría el teclado de golpe
