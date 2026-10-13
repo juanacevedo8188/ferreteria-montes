@@ -6,6 +6,11 @@ Web de Ferretera Montes (Blvd. Rondeau 762, Rosario).
 - Hero con escena de scroll: un martillo engancha el clavo del cartel y tira la portada hacia abajo.
 - Tipografías: Saira Stencil One (cartel), Saira (títulos) y Barlow (texto), desde Google Fonts.
 
+## Dominio
+
+**https://ferreteriamontes.com.ar** (registrado en NIC.ar, delegado a Vercel con
+`ns1.vercel-dns.com` y `ns2.vercel-dns.com`). Los registros DNS se manejan desde Vercel.
+
 ## Deploy
 
 Vercel → Add New → Project → importar este repo → Framework Preset: **Other** → Deploy.
@@ -60,7 +65,7 @@ Reglas para que no se rompa:
 Se genera a partir de `assets-fuente/og-image.html`: abrilo en Chrome con la ventana en 1200×630 y sacá una captura.
 
 WhatsApp guarda la vista previa en caché: si cambiás la imagen, puede tardar en actualizarse
-(para forzarlo, compartí el link con algo al final, por ejemplo `ferreteria-montes.vercel.app/?v=2`).
+(para forzarlo, compartí el link con algo al final, por ejemplo `ferreteriamontes.com.ar/?v=2`).
 
 ## Cartel QR para reseñas (imprimible)
 
@@ -71,7 +76,7 @@ En `imprimibles/`:
 - `qr-resena.png`: un solo cartel, para mandar por WhatsApp o imprimir suelto.
 - `qr-resena.svg`: el QR solo, en vector (sirve para stickers, bolsas o tarjetas).
 - `qr-resena.html`: el diseño editable; también se puede abrir en el navegador y
-  imprimir desde ahí: `ferreteria-montes.vercel.app/imprimibles/qr-resena.html`.
+  imprimir desde ahí: `ferreteriamontes.com.ar/imprimibles/qr-resena.html`.
 
 El QR lleva a `https://search.google.com/local/writereview?placeid=ChIJjxgpDG9TtpUR6t3GSvXgrQA`
 (la ventana de "Escribir una reseña" de Google para Ferretera Montes).
