@@ -80,3 +80,22 @@ En `imprimibles/`:
 
 El QR lleva a `https://search.google.com/local/writereview?placeid=ChIJjxgpDG9TtpUR6t3GSvXgrQA`
 (la ventana de "Escribir una reseña" de Google para Ferretera Montes).
+
+## Horarios y reseñas desde Google Maps
+
+La web toma los horarios, la calificación y la cantidad de reseñas del **Perfil de Empresa en Google**
+a través de `api/horarios.js` (función de Vercel que usa Places API). Si el dueño cambia los horarios
+en Google, la web se actualiza sola en hasta 6 horas. Si la API no responde, se usan los horarios de
+respaldo de `index.html` (`HORARIOS`).
+
+Configuración (una sola vez):
+
+1. En [console.cloud.google.com](https://console.cloud.google.com) crear un proyecto y activar
+   **Places API (New)**. Google pide una cuenta de facturación (tarjeta), aunque este uso entra en el cupo gratuito.
+2. En *APIs y servicios → Credenciales* crear una **clave de API** y restringirla a **Places API (New)**.
+3. En Vercel: *Settings → Environment Variables* → `GOOGLE_PLACES_KEY` = la clave → *Save*.
+4. *Deployments* → en el último, *Redeploy*.
+5. Probar: `https://ferreteriamontes.com.ar/api/horarios` tiene que mostrar los horarios.
+
+Consumo: la respuesta queda guardada 6 h en Vercel, así que son unas 4 consultas a Google por día
+(~120 por mes), sin importar cuántas visitas tenga la web.
