@@ -81,21 +81,27 @@ En `imprimibles/`:
 El QR lleva a `https://search.google.com/local/writereview?placeid=ChIJjxgpDG9TtpUR6t3GSvXgrQA`
 (la ventana de "Escribir una reseña" de Google para Ferretera Montes).
 
-## Horarios y reseñas desde Google Maps
+## Cómo actualizar los horarios
 
-La web toma los horarios, la calificación y la cantidad de reseñas del **Perfil de Empresa en Google**
-a través de `api/horarios.js` (función de Vercel que usa Places API). Si el dueño cambia los horarios
-en Google, la web se actualiza sola en hasta 6 horas. Si la API no responde, se usan los horarios de
-respaldo de `index.html` (`HORARIOS`).
+Los horarios están en [`horarios.json`](horarios.json). Se editan igual que las ofertas: abrir el archivo
+en GitHub, tocar el lápiz ✏️, cambiar y *Commit changes*. En un minuto se actualizan la tabla de Contacto,
+el "Abierto / Cerrado", la respuesta del chat y la pantalla del hero.
 
-Configuración (una sola vez):
+```json
+{
+  "lunes":     ["8:30-13", "16:30-18:30"],
+  "sábado":    ["9-13"],
+  "domingo":   [],
 
-1. En [console.cloud.google.com](https://console.cloud.google.com) crear un proyecto y activar
-   **Places API (New)**. Google pide una cuenta de facturación (tarjeta), aunque este uso entra en el cupo gratuito.
-2. En *APIs y servicios → Credenciales* crear una **clave de API** y restringirla a **Places API (New)**.
-3. En Vercel: *Settings → Environment Variables* → `GOOGLE_PLACES_KEY` = la clave → *Save*.
-4. *Deployments* → en el último, *Redeploy*.
-5. Probar: `https://ferreteriamontes.com.ar/api/horarios` tiene que mostrar los horarios.
+  "cerrado": [
+    { "fecha": "2026-11-23", "motivo": "Feriado" }
+  ],
 
-Consumo: la respuesta queda guardada 6 h en Vercel, así que son unas 4 consultas a Google por día
-(~120 por mes), sin importar cuántas visitas tenga la web.
+  "google": { "rating": 4.8, "reseñas": 58 }
+}
+```
+
+- Cada día lleva una lista de turnos `"desde-hasta"` (`"8:30-13"`). Día sin turnos (`[]`) = cerrado. Tienen que estar los 7 días.
+- `cerrado`: fechas puntuales (formato `AAAA-MM-DD`) en las que no abren. Se muestran en la tabla desde 14 días antes.
+- `google`: calificación y cantidad de reseñas que muestra la web; copiarlas de Google Maps cada tanto.
+- Si el archivo tiene un error, la web usa los horarios de respaldo de `index.html`.
