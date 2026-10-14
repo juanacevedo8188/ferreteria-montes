@@ -1,6 +1,6 @@
-# Ferretera Montes
+# Ferretería Montes
 
-Web de Ferretera Montes (Blvd. Rondeau 762, Rosario).
+Web de Ferretería Montes (Blvd. Rondeau 762, Rosario).
 
 - Un solo `index.html`: HTML, CSS y JS vanilla, sin build.
 - Hero con escena de scroll: un martillo engancha el clavo del cartel y tira la portada hacia abajo.
@@ -79,7 +79,7 @@ En `imprimibles/`:
   imprimir desde ahí: `ferreteriamontes.com.ar/imprimibles/qr-resena.html`.
 
 El QR lleva a `https://search.google.com/local/writereview?placeid=ChIJjxgpDG9TtpUR6t3GSvXgrQA`
-(la ventana de "Escribir una reseña" de Google para Ferretera Montes).
+(la ventana de "Escribir una reseña" de Google para Ferretería Montes).
 
 ## Cómo actualizar los horarios
 
